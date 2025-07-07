@@ -2,367 +2,480 @@
 
 import type React from "react"
 
-import { useState, useRef, useCallback } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
+import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
 import {
   Upload,
   File,
-  CheckCircle,
-  AlertCircle,
-  Download,
-  Eye,
-  Trash2,
   FileText,
   ImageIcon,
-  FileSpreadsheet,
+  Download,
+  Trash2,
+  Eye,
+  Share,
+  FolderOpen,
+  Plus,
+  Search,
+  CheckCircle,
+  Clock,
+  AlertCircle,
 } from "lucide-react"
 
-interface UploadedFile {
+interface Document {
   id: string
   name: string
-  size: number
   type: string
-  uploadProgress: number
-  status: "uploading" | "completed" | "error"
-  url?: string
-  uploadedAt: Date
+  size: string
+  uploadDate: string
+  status: "processing" | "completed" | "error"
+  category: string
+  insights?: number
 }
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB
-const ALLOWED_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/vnd.ms-excel",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  "image/jpeg",
-  "image/png",
-  "image/gif",
-  "text/plain",
-]
-
 export default function DocumentManager() {
-  const [files, setFiles] = useState<UploadedFile[]>([])
-  const [isDragOver, setIsDragOver] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [documents, setDocuments] = useState<Document[]>([
+    {
+      id: "1",
+      name: "Business_Plan_2024.pdf",
+      type: "pdf",
+      size: "2.4 MB",
+      uploadDate: "2024-01-15",
+      status: "completed",
+      category: "Strategy",
+      insights: 23,
+    },
+    {
+      id: "2",
+      name: "Financial_Statements_Q4.xlsx",
+      type: "excel",
+      size: "1.8 MB",
+      uploadDate: "2024-01-14",
+      status: "completed",
+      category: "Finance",
+      insights: 18,
+    },
+    {
+      id: "3",
+      name: "Market_Research_Report.docx",
+      type: "word",
+      size: "3.2 MB",
+      uploadDate: "2024-01-13",
+      status: "processing",
+      category: "Research",
+    },
+    {
+      id: "4",
+      name: "Competitor_Analysis.pdf",
+      type: "pdf",
+      size: "1.5 MB",
+      uploadDate: "2024-01-12",
+      status: "completed",
+      category: "Analysis",
+      insights: 15,
+    },
+  ])
 
-  const getFileIcon = (type: string) => {
-    if (type.includes("pdf")) return <FileText className="w-5 h-5 text-red-500" />
-    if (type.includes("image")) return <ImageIcon className="w-5 h-5 text-blue-500" />
-    if (type.includes("sheet") || type.includes("excel")) return <FileSpreadsheet className="w-5 h-5 text-green-500" />
-    return <File className="w-5 h-5 text-gray-500" />
-  }
+  const [isUploading, setIsUploading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("all")
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes"
-    const k = 1024
-    const sizes = ["Bytes", "KB", "MB", "GB"]
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
-  }
+  const categories = ["all", "Strategy", "Finance", "Research", "Analysis", "Operations", "Marketing"]
 
-  const validateFile = (file: File): string | null => {
-    if (file.size > MAX_FILE_SIZE) {
-      return `File size exceeds 100MB limit. Current size: ${formatFileSize(file.size)}`
-    }
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return `File type not supported: ${file.type}`
-    }
-    return null
-  }
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files || files.length === 0) return
 
-  const generateSecureFileName = (originalName: string): string => {
-    const timestamp = Date.now()
-    const randomString = Math.random().toString(36).substring(2, 15)
-    const extension = originalName.split(".").pop()
-    const baseName = originalName
-      .split(".")
-      .slice(0, -1)
-      .join(".")
-      .replace(/[^a-zA-Z0-9]/g, "_")
-      .substring(0, 50)
-    return `${baseName}_${timestamp}_${randomString}.${extension}`
-  }
-
-  const uploadFile = useCallback(async (file: File) => {
-    const fileId = Math.random().toString(36).substring(2, 15)
-    const secureFileName = generateSecureFileName(file.name)
-
-    const newFile: UploadedFile = {
-      id: fileId,
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      uploadProgress: 0,
-      status: "uploading",
-      uploadedAt: new Date(),
-    }
-
-    setFiles((prev) => [...prev, newFile])
+    setIsUploading(true)
 
     try {
-      const formData = new FormData()
-      formData.append("file", file)
-      formData.append("secureFileName", secureFileName)
+      for (const file of files) {
+        const formData = new FormData()
+        formData.append("file", file)
 
-      const xhr = new XMLHttpRequest()
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        })
 
-      xhr.upload.addEventListener("progress", (event) => {
-        if (event.lengthComputable) {
-          const progress = Math.round((event.loaded / event.total) * 100)
-          setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, uploadProgress: progress } : f)))
-        }
-      })
+        if (response.ok) {
+          const result = await response.json()
 
-      xhr.addEventListener("load", () => {
-        if (xhr.status === 200) {
-          const response = JSON.parse(xhr.responseText)
-          setFiles((prev) =>
-            prev.map((f) =>
-              f.id === fileId ? { ...f, status: "completed", uploadProgress: 100, url: response.url } : f,
-            ),
-          )
-
-          // Store in localStorage for persistence
-          const uploadedFiles = JSON.parse(localStorage.getItem("uploadedFiles") || "[]")
-          uploadedFiles.push({
-            id: fileId,
+          const newDocument: Document = {
+            id: Date.now().toString(),
             name: file.name,
-            size: file.size,
-            type: file.type,
-            url: response.url,
-            uploadedAt: new Date().toISOString(),
-          })
-          localStorage.setItem("uploadedFiles", JSON.stringify(uploadedFiles))
-        } else {
-          throw new Error(`Upload failed with status: ${xhr.status}`)
+            type: file.type.includes("pdf") ? "pdf" : file.type.includes("sheet") ? "excel" : "word",
+            size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
+            uploadDate: new Date().toISOString().split("T")[0],
+            status: "processing",
+            category: "Strategy", // Default category
+          }
+
+          setDocuments((prev) => [newDocument, ...prev])
+
+          // Simulate processing completion
+          setTimeout(() => {
+            setDocuments((prev) =>
+              prev.map((doc) =>
+                doc.id === newDocument.id
+                  ? { ...doc, status: "completed" as const, insights: Math.floor(Math.random() * 30) + 5 }
+                  : doc,
+              ),
+            )
+          }, 3000)
         }
-      })
-
-      xhr.addEventListener("error", () => {
-        setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: "error" } : f)))
-      })
-
-      xhr.open("POST", "/api/upload")
-      xhr.send(formData)
+      }
     } catch (error) {
-      console.error("Upload error:", error)
-      setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: "error" } : f)))
-    }
-  }, [])
-
-  const handleFileSelect = useCallback(
-    (selectedFiles: FileList | null) => {
-      if (!selectedFiles) return
-
-      Array.from(selectedFiles).forEach((file) => {
-        const error = validateFile(file)
-        if (error) {
-          alert(error)
-          return
-        }
-        uploadFile(file)
-      })
-    },
-    [uploadFile],
-  )
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault()
-      setIsDragOver(false)
-      handleFileSelect(e.dataTransfer.files)
-    },
-    [handleFileSelect],
-  )
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragOver(true)
-  }, [])
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragOver(false)
-  }, [])
-
-  const removeFile = (fileId: string) => {
-    setFiles((prev) => prev.filter((f) => f.id !== fileId))
-
-    // Remove from localStorage
-    const uploadedFiles = JSON.parse(localStorage.getItem("uploadedFiles") || "[]")
-    const updatedFiles = uploadedFiles.filter((f: any) => f.id !== fileId)
-    localStorage.setItem("uploadedFiles", JSON.stringify(updatedFiles))
-  }
-
-  const downloadFile = (file: UploadedFile) => {
-    if (file.url) {
-      const link = document.createElement("a")
-      link.href = file.url
-      link.download = file.name
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      console.error("Upload failed:", error)
+    } finally {
+      setIsUploading(false)
+      // Reset input
+      event.target.value = ""
     }
   }
 
-  // Load files from localStorage on component mount
-  useState(() => {
-    const savedFiles = JSON.parse(localStorage.getItem("uploadedFiles") || "[]")
-    const loadedFiles = savedFiles.map((f: any) => ({
-      ...f,
-      status: "completed",
-      uploadProgress: 100,
-      uploadedAt: new Date(f.uploadedAt),
-    }))
-    setFiles(loadedFiles)
+  const deleteDocument = (id: string) => {
+    setDocuments((prev) => prev.filter((doc) => doc.id !== id))
+  }
+
+  const getFileIcon = (type: string) => {
+    switch (type) {
+      case "pdf":
+        return <FileText className="w-5 h-5 text-red-400" />
+      case "excel":
+        return <File className="w-5 h-5 text-green-400" />
+      case "word":
+        return <FileText className="w-5 h-5 text-blue-400" />
+      default:
+        return <ImageIcon className="w-5 h-5 text-gray-400" />
+    }
+  }
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "completed":
+        return (
+          <Badge className="bg-green-600 text-white border-green-500">
+            <CheckCircle className="w-3 h-3 mr-1" />
+            Processed
+          </Badge>
+        )
+      case "processing":
+        return (
+          <Badge className="bg-orange-600 text-white border-orange-500">
+            <Clock className="w-3 h-3 mr-1" />
+            Processing
+          </Badge>
+        )
+      case "error":
+        return (
+          <Badge className="bg-red-600 text-white border-red-500">
+            <AlertCircle className="w-3 h-3 mr-1" />
+            Error
+          </Badge>
+        )
+      default:
+        return <Badge variant="outline">Unknown</Badge>
+    }
+  }
+
+  const filteredDocuments = documents.filter((doc) => {
+    const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCategory = selectedCategory === "all" || doc.category === selectedCategory
+    return matchesSearch && matchesCategory
   })
 
-  const completedFiles = files.filter((f) => f.status === "completed")
-  const totalSize = completedFiles.reduce((sum, f) => sum + f.size, 0)
+  const totalSize = documents.reduce((acc, doc) => {
+    const size = Number.parseFloat(doc.size.replace(" MB", ""))
+    return acc + size
+  }, 0)
+
+  const completedDocuments = documents.filter((doc) => doc.status === "completed").length
+  const totalInsights = documents.reduce((acc, doc) => acc + (doc.insights || 0), 0)
 
   return (
     <div className="space-y-6">
-      {/* Upload Area */}
-      <Card>
+      {/* Document Overview */}
+      <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Upload className="w-5 h-5" />
-            Document Upload
+          <CardTitle className="text-white flex items-center gap-2">
+            <FolderOpen className="w-5 h-5" />
+            Document Management
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              isDragOver ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:border-gray-400"
-            }`}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-          >
-            <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-800 mb-2">Drop files here or click to upload</h3>
-            <p className="text-gray-600 mb-4">Support for PDF, Word, Excel, Images, and Text files up to 100MB</p>
-            <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-500 hover:bg-blue-600 text-white">
-              Choose Files
-            </Button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              className="hidden"
-              accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.txt"
-              onChange={(e) => handleFileSelect(e.target.files)}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-gray-700 rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <File className="w-5 h-5 text-blue-400" />
+                <span className="text-sm text-gray-300">Total Documents</span>
+              </div>
+              <div className="text-2xl font-bold text-white">{documents.length}</div>
+            </div>
+            <div className="bg-gray-700 rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <span className="text-sm text-gray-300">Processed</span>
+              </div>
+              <div className="text-2xl font-bold text-white">{completedDocuments}</div>
+            </div>
+            <div className="bg-gray-700 rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Eye className="w-5 h-5 text-purple-400" />
+                <span className="text-sm text-gray-300">Total Insights</span>
+              </div>
+              <div className="text-2xl font-bold text-white">{totalInsights}</div>
+            </div>
+            <div className="bg-gray-700 rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Upload className="w-5 h-5 text-orange-400" />
+                <span className="text-sm text-gray-300">Storage Used</span>
+              </div>
+              <div className="text-2xl font-bold text-white">{totalSize.toFixed(1)} MB</div>
+            </div>
           </div>
 
-          {/* Upload Statistics */}
-          <div className="mt-4 grid grid-cols-3 gap-4 text-center">
-            <div>
-              <div className="text-2xl font-bold text-blue-600">{completedFiles.length}</div>
-              <div className="text-sm text-gray-600">Files Uploaded</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-green-600">{formatFileSize(totalSize)}</div>
-              <div className="text-sm text-gray-600">Total Size</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-purple-600">100MB</div>
-              <div className="text-sm text-gray-600">Max File Size</div>
+          {/* Upload Area */}
+          <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center hover:border-gray-500 transition-colors">
+            <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">Upload Business Documents</h3>
+            <p className="text-gray-300 mb-4">
+              Drag and drop files here, or click to select files
+              <br />
+              <span className="text-sm text-gray-400">
+                Supported formats: PDF, Word, Excel, PowerPoint (Max 100MB per file)
+              </span>
+            </p>
+            <div className="flex items-center justify-center gap-4">
+              <label htmlFor="file-upload">
+                <Button
+                  as="span"
+                  disabled={isUploading}
+                  className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                >
+                  {isUploading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Select Files
+                    </>
+                  )}
+                </Button>
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* File List */}
-      {files.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Uploaded Files</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {files.map((file) => (
-                <div
-                  key={file.id}
-                  className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex-shrink-0">{getFileIcon(file.type)}</div>
-
-                  <div className="flex-grow min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="font-medium text-gray-800 truncate">{file.name}</p>
-                      <Badge
-                        variant={
-                          file.status === "completed"
-                            ? "default"
-                            : file.status === "error"
-                              ? "destructive"
-                              : "secondary"
-                        }
-                      >
-                        {file.status === "completed" && <CheckCircle className="w-3 h-3 mr-1" />}
-                        {file.status === "error" && <AlertCircle className="w-3 h-3 mr-1" />}
-                        {file.status}
+      {/* Document List */}
+      <Card className="bg-gray-800 border-gray-700">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-white">Your Documents</CardTitle>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  placeholder="Search documents..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400 w-64"
+                />
+              </div>
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm"
+              >
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category === "all" ? "All Categories" : category}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {filteredDocuments.map((document) => (
+              <div
+                key={document.id}
+                className="flex items-center justify-between p-4 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0">{getFileIcon(document.type)}</div>
+                  <div className="flex-grow">
+                    <h4 className="font-medium text-white">{document.name}</h4>
+                    <div className="flex items-center gap-4 text-sm text-gray-300">
+                      <span>{document.size}</span>
+                      <span>•</span>
+                      <span>Uploaded {document.uploadDate}</span>
+                      <span>•</span>
+                      <Badge variant="outline" className="border-gray-600 text-gray-300">
+                        {document.category}
                       </Badge>
                     </div>
-
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                      <span>{formatFileSize(file.size)}</span>
-                      <span>{file.uploadedAt.toLocaleDateString()}</span>
-                    </div>
-
-                    {file.status === "uploading" && (
-                      <div className="mt-2">
-                        <Progress value={file.uploadProgress} className="h-2" />
-                        <p className="text-xs text-gray-500 mt-1">{file.uploadProgress}% uploaded</p>
-                      </div>
-                    )}
                   </div>
-
-                  <div className="flex items-center gap-2">
-                    {file.status === "completed" && (
-                      <>
-                        <Button size="sm" variant="outline" onClick={() => downloadFile(file)}>
-                          <Download className="w-4 h-4" />
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                      </>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    {document.insights && (
+                      <div className="text-sm text-blue-400 mb-1">{document.insights} insights extracted</div>
                     )}
+                    {getStatusBadge(document.status)}
+                  </div>
+                  <div className="flex items-center gap-2">
                     <Button
-                      size="sm"
                       variant="outline"
-                      onClick={() => removeFile(file.id)}
-                      className="text-red-600 hover:text-red-700"
+                      size="sm"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                    >
+                      <Download className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                    >
+                      <Share className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => deleteDocument(document.id)}
+                      className="border-red-600 text-red-400 hover:bg-red-900/50 bg-transparent"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
-              ))}
+              </div>
+            ))}
+          </div>
+
+          {filteredDocuments.length === 0 && (
+            <div className="text-center py-12">
+              <ImageIcon className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-400 mb-2">No documents found</h3>
+              <p className="text-gray-500">
+                {searchTerm || selectedCategory !== "all"
+                  ? "Try adjusting your search or filter criteria"
+                  : "Upload your first document to get started"}
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Processing Status */}
+      {documents.some((doc) => doc.status === "processing") && (
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              Processing Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {documents
+                .filter((doc) => doc.status === "processing")
+                .map((document) => (
+                  <div key={document.id} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-300">{document.name}</span>
+                      <span className="text-sm text-orange-400">Processing...</span>
+                    </div>
+                    <Progress value={65} className="h-2" />
+                    <p className="text-xs text-gray-400">
+                      Analyzing document structure and extracting business insights...
+                    </p>
+                  </div>
+                ))}
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* File Management Tips */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="pt-6">
-          <h3 className="font-medium text-blue-800 mb-2">📋 File Management Tips</h3>
-          <ul className="text-sm text-blue-700 space-y-1">
-            <li>• Files are automatically renamed with secure identifiers</li>
-            <li>• All uploads are validated for type and size</li>
-            <li>• Files are stored locally and synced with your profile</li>
-            <li>• Maximum file size: 100MB per file</li>
-            <li>• Supported formats: PDF, Word, Excel, Images, Text</li>
-          </ul>
-        </CardContent>
-      </Card>
+      {/* Document Insights */}
+      {totalInsights > 0 && (
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Eye className="w-5 h-5" />
+              Document Insights Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold text-white mb-3">Key Findings</h4>
+                <div className="space-y-2">
+                  <div className="p-3 bg-blue-900/50 border border-blue-700 rounded-lg">
+                    <p className="text-sm text-blue-200">
+                      Financial documents show strong revenue growth of 23% year-over-year
+                    </p>
+                  </div>
+                  <div className="p-3 bg-green-900/50 border border-green-700 rounded-lg">
+                    <p className="text-sm text-green-200">
+                      Market research indicates significant expansion opportunities in DACH region
+                    </p>
+                  </div>
+                  <div className="p-3 bg-orange-900/50 border border-orange-700 rounded-lg">
+                    <p className="text-sm text-orange-200">
+                      Operational efficiency could be improved by 15% through automation
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold text-white mb-3">Recommendations</h4>
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-sm text-gray-300">
+                      Consider expanding sales team to capitalize on market opportunities
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-sm text-gray-300">
+                      Implement CRM system to improve customer relationship management
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-sm text-gray-300">Explore strategic partnerships to accelerate growth</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

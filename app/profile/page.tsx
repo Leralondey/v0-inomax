@@ -37,6 +37,7 @@ import {
   Zap,
   Brain,
   ArrowRight,
+  Users,
 } from "lucide-react"
 
 // Import components
@@ -44,6 +45,7 @@ import PhoneVerifier from "@/components/phone-verifier"
 import DocumentManager from "@/components/document-manager"
 import SupersetDashboard from "@/components/superset-dashboard"
 import ServiceOfferings from "@/components/service-offerings"
+import TeamManagement from "@/components/team-management"
 
 interface UserProfile {
   firstName: string
@@ -386,13 +388,20 @@ export default function ProfilePage() {
           {/* Main Content Area */}
           <div className="lg:col-span-3">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-6 bg-gray-800 border-gray-700">
+              <TabsList className="grid w-full grid-cols-7 bg-gray-800 border-gray-700">
                 <TabsTrigger
                   value="profile"
                   className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
                 >
                   <User className="w-4 h-4" />
                   Profile
+                </TabsTrigger>
+                <TabsTrigger
+                  value="team"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
+                >
+                  <Users className="w-4 h-4" />
+                  Team
                 </TabsTrigger>
                 <TabsTrigger
                   value="maturity"
@@ -701,6 +710,11 @@ export default function ProfilePage() {
                     </CardContent>
                   </Card>
                 )}
+              </TabsContent>
+
+              {/* Team Tab */}
+              <TabsContent value="team" className="space-y-6">
+                <TeamManagement />
               </TabsContent>
 
               {/* Maturity Tab */}
