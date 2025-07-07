@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { X, Mail, Phone, User, Building, Chrome, Apple } from "lucide-react"
+import { X, Mail, Phone, User, Building, Chrome, Apple, Linkedin, Globe } from "lucide-react"
 
 interface SignupModalProps {
   isOpen: boolean
@@ -19,6 +19,7 @@ interface FormData {
   firstName: string
   lastName: string
   companyName: string
+  companyWebsite: string
   email: string
   phone: string
 }
@@ -28,6 +29,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
     firstName: "",
     lastName: "",
     companyName: "",
+    companyWebsite: "",
     email: "",
     phone: "",
   })
@@ -53,6 +55,9 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
     if (!formData.lastName.trim()) {
       newErrors.lastName = "Last name is required"
     }
+    if (!formData.companyName.trim()) {
+      newErrors.companyName = "Company name is required"
+    }
     if (!formData.email.trim()) {
       newErrors.email = "Email is required"
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -60,6 +65,10 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
     }
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required"
+    }
+    // Optional website validation - only validate if provided
+    if (formData.companyWebsite.trim() && !/^https?:\/\/.+\..+/.test(formData.companyWebsite)) {
+      newErrors.companyWebsite = "Please enter a valid website URL (e.g., https://example.com)"
     }
 
     setErrors(newErrors)
@@ -86,6 +95,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
         firstName: "",
         lastName: "",
         companyName: "",
+        companyWebsite: "",
         email: "",
         phone: "",
       })
@@ -96,7 +106,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
     }
   }
 
-  const handleSocialLogin = async (provider: "google" | "apple") => {
+  const handleSocialLogin = async (provider: "google" | "apple" | "linkedin") => {
     setIsLoading(true)
 
     try {
@@ -105,18 +115,28 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
 
       // Simulate getting user data from social provider
       const mockUserData = {
-        firstName: provider === "google" ? "John" : "Jane",
-        lastName: provider === "google" ? "Doe" : "Smith",
-        email: provider === "google" ? "john.doe@gmail.com" : "jane.smith@icloud.com",
-        companyName: "",
+        firstName: provider === "google" ? "John" : provider === "apple" ? "Jane" : "Michael",
+        lastName: provider === "google" ? "Doe" : provider === "apple" ? "Smith" : "Johnson",
+        email:
+          provider === "google"
+            ? "john.doe@gmail.com"
+            : provider === "apple"
+              ? "jane.smith@icloud.com"
+              : "michael.johnson@company.com",
+        companyName: provider === "linkedin" ? "Tech Solutions Inc." : "",
+        companyWebsite: provider === "linkedin" ? "https://techsolutions.com" : "",
         phone: "", // Usually not provided by social login
       }
 
       setFormData(mockUserData)
 
       // Show message about completing missing info
-      if (!mockUserData.phone) {
-        alert("Login successful! Please complete the missing information.")
+      const missingFields = []
+      if (!mockUserData.phone) missingFields.push("phone number")
+      if (!mockUserData.companyName) missingFields.push("company name")
+
+      if (missingFields.length > 0) {
+        alert(`Login successful! Please complete the missing information: ${missingFields.join(", ")}.`)
       }
     } catch (error) {
       alert("Login error. Please try again.")
@@ -146,6 +166,15 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
         <CardContent className="space-y-6">
           {/* Social Login Buttons */}
           <div className="space-y-3">
+            <Button
+              onClick={() => handleSocialLogin("linkedin")}
+              disabled={isLoading}
+              className="w-full bg-[#0077B5] text-white hover:bg-[#005885] border-0 flex items-center gap-3"
+            >
+              <Linkedin className="w-5 h-5" />
+              Continue with LinkedIn
+            </Button>
+
             <Button
               onClick={() => handleSocialLogin("google")}
               disabled={isLoading}
@@ -214,7 +243,7 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
 
             <div className="space-y-2">
               <Label htmlFor="companyName" className="text-white">
-                Company Name <span className="text-gray-400">(optional)</span>
+                Company Name *
               </Label>
               <div className="relative">
                 <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -227,6 +256,25 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
                   placeholder="My Company Ltd"
                 />
               </div>
+              {errors.companyName && <p className="text-red-400 text-xs">{errors.companyName}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="companyWebsite" className="text-white">
+                Company Website <span className="text-gray-400">(optional)</span>
+              </Label>
+              <div className="relative">
+                <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  id="companyWebsite"
+                  type="url"
+                  value={formData.companyWebsite}
+                  onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
+                  className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500"
+                  placeholder="https://www.mycompany.com"
+                />
+              </div>
+              {errors.companyWebsite && <p className="text-red-400 text-xs">{errors.companyWebsite}</p>}
             </div>
 
             <div className="space-y-2">
