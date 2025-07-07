@@ -107,7 +107,7 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white"
+              className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white bg-transparent"
             >
               Watch Demo
             </Button>
@@ -519,7 +519,7 @@ export default function HomePage() {
                   </li>
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>Radar chart visualization across 300+ metrics</span>
+                    <span>General assessment with strategic analysis and recommendations</span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
@@ -774,7 +774,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-blue-600"
+                className="border-white text-white hover:bg-white hover:text-blue-600 bg-transparent"
               >
                 Schedule a Call
               </Button>
