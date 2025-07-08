@@ -1,15 +1,20 @@
 {
-  "name": "Inomax.ai - AI-Powered Business Intelligence",
-  "short_name": "Inomax.ai",
-  "description": "Transform your business with AI-driven insights and Swiss precision",
+  "name": "Inomax.ai",
+  "short_name": "Inomax",
+  "description": "AI-Powered Business Intelligence Platform",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "theme_color": "#8B5CF6",
   "icons": [
     {
       "src": "/favicon-16x16.png",
       "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
       "type": "image/png"
     },
     {

@@ -1,0 +1,10 @@
+<!-- This is a placeholder for the favicon.ico file.
+Since favicon.ico is a binary file, it cannot be represented as text.
+To replace the favicon, you would need to replace the actual file in the public directory with a new favicon.ico file.
+
+If you want to use an SVG favicon, you would typically link to it in the HTML head section of your application, like this:
+
+<link rel="icon" href="/favicon.png" type="image/svg+xml">
+
+This placeholder serves as a reminder that the actual favicon.ico file needs to be present in the public directory.
+-->
