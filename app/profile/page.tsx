@@ -12,6 +12,15 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Progress } from "@/components/ui/progress"
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@/components/ui/dialog"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
   User,
   Mail,
   Phone,
@@ -38,6 +47,17 @@ import {
   Brain,
   ArrowRight,
   Users,
+  Trash2,
+  AlertTriangle,
+  Linkedin,
+  Chrome,
+  Apple,
+  Link,
+  Unlink,
+  RefreshCw,
+  GraduationCap,
+  Briefcase,
+  UserCheck,
 } from "lucide-react"
 
 // Import components
@@ -46,6 +66,34 @@ import DocumentManager from "@/components/document-manager"
 import SupersetDashboard from "@/components/superset-dashboard"
 import ServiceOfferings from "@/components/service-offerings"
 import TeamManagement from "@/components/team-management"
+
+interface SocialConnection {
+  provider: "linkedin" | "google" | "apple"
+  connected: boolean
+  connectedAt?: string
+  profileData?: {
+    id: string
+    name: string
+    email: string
+    profilePicture?: string
+    company?: string
+    position?: string
+    education?: Array<{
+      school: string
+      degree: string
+      field: string
+      startYear: number
+      endYear?: number
+    }>
+    experience?: Array<{
+      company: string
+      position: string
+      startDate: string
+      endDate?: string
+      current: boolean
+    }>
+  }
+}
 
 interface UserProfile {
   firstName: string
@@ -65,6 +113,26 @@ interface UserProfile {
   isProfileVerified: boolean
   maturityLevel: string
   maturityScore: number
+  profilePicture?: string
+  socialConnections: {
+    linkedin: SocialConnection
+    google: SocialConnection
+    apple: SocialConnection
+  }
+  education: Array<{
+    school: string
+    degree: string
+    field: string
+    startYear: number
+    endYear?: number
+  }>
+  experience: Array<{
+    company: string
+    position: string
+    startDate: string
+    endDate?: string
+    current: boolean
+  }>
 }
 
 interface MaturityLevel {
@@ -210,11 +278,22 @@ export default function ProfilePage() {
     isProfileVerified: false,
     maturityLevel: "growth",
     maturityScore: 55,
+    profilePicture: undefined,
+    socialConnections: {
+      linkedin: { provider: "linkedin", connected: false },
+      google: { provider: "google", connected: false },
+      apple: { provider: "apple", connected: false },
+    },
+    education: [],
+    experience: [],
   })
 
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [activeTab, setActiveTab] = useState("profile")
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [deleteConfirmation, setDeleteConfirmation] = useState("")
+  const [isConnecting, setIsConnecting] = useState<string | null>(null)
 
   const currentMaturityLevel =
     maturityLevels.find((level) => level.level === profile.maturityLevel) || maturityLevels[0]
@@ -257,6 +336,170 @@ export default function ProfilePage() {
     } catch (error) {
       console.error("Failed to verify profile:", error)
     }
+  }
+
+  const handleSocialConnect = async (provider: "linkedin" | "google" | "apple") => {
+    setIsConnecting(provider)
+
+    try {
+      const response = await fetch(`/api/profile/connect-${provider}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: "user123" }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        // Update profile with connected social data
+        setProfile((prev) => ({
+          ...prev,
+          socialConnections: {
+            ...prev.socialConnections,
+            [provider]: {
+              provider,
+              connected: true,
+              connectedAt: new Date().toISOString(),
+              profileData: result.profileData,
+            },
+          },
+          // Update profile fields if LinkedIn data is available
+          ...(provider === "linkedin" &&
+            result.profileData && {
+              profilePicture: result.profileData.profilePicture,
+              companyName: result.profileData.company || prev.companyName,
+              jobTitle: result.profileData.position || prev.jobTitle,
+              education: result.profileData.education || prev.education,
+              experience: result.profileData.experience || prev.experience,
+              isProfileVerified: true, // Auto-verify if LinkedIn is connected
+            }),
+        }))
+
+        // Show success message
+        console.log(`${provider} connected successfully`)
+      }
+    } catch (error) {
+      console.error(`Failed to connect ${provider}:`, error)
+    } finally {
+      setIsConnecting(null)
+    }
+  }
+
+  const handleSocialDisconnect = async (provider: "linkedin" | "google" | "apple") => {
+    try {
+      const response = await fetch(`/api/profile/disconnect-${provider}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: "user123" }),
+      })
+
+      if (response.ok) {
+        setProfile((prev) => ({
+          ...prev,
+          socialConnections: {
+            ...prev.socialConnections,
+            [provider]: {
+              provider,
+              connected: false,
+            },
+          },
+          // Remove profile picture if LinkedIn is disconnected
+          ...(provider === "linkedin" && {
+            profilePicture: undefined,
+          }),
+        }))
+      }
+    } catch (error) {
+      console.error(`Failed to disconnect ${provider}:`, error)
+    }
+  }
+
+  const handleSyncLinkedInData = async () => {
+    if (!profile.socialConnections.linkedin.connected) return
+
+    setIsConnecting("linkedin")
+
+    try {
+      const response = await fetch("/api/profile/sync-linkedin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: "user123" }),
+      })
+
+      const result = await response.json()
+
+      if (result.success && result.profileData) {
+        setProfile((prev) => ({
+          ...prev,
+          companyName: result.profileData.company || prev.companyName,
+          jobTitle: result.profileData.position || prev.jobTitle,
+          education: result.profileData.education || prev.education,
+          experience: result.profileData.experience || prev.experience,
+          profilePicture: result.profileData.profilePicture || prev.profilePicture,
+          socialConnections: {
+            ...prev.socialConnections,
+            linkedin: {
+              ...prev.socialConnections.linkedin,
+              profileData: result.profileData,
+            },
+          },
+        }))
+      }
+    } catch (error) {
+      console.error("Failed to sync LinkedIn data:", error)
+    } finally {
+      setIsConnecting(null)
+    }
+  }
+
+  const handleDeleteAllData = async () => {
+    if (deleteConfirmation !== "SUPPRIMER") {
+      return
+    }
+
+    try {
+      const response = await fetch("/api/profile/delete-all-data", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ confirmation: deleteConfirmation }),
+      })
+
+      if (response.ok) {
+        // Redirect to home page or show success message
+        window.location.href = "/"
+      }
+    } catch (error) {
+      console.error("Failed to delete data:", error)
+    }
+  }
+
+  const getSocialButtonConfig = (provider: "linkedin" | "google" | "apple") => {
+    const configs = {
+      linkedin: {
+        icon: Linkedin,
+        color: "bg-[#0077B5] hover:bg-[#005885]",
+        label: "LinkedIn",
+      },
+      google: {
+        icon: Chrome,
+        color: "bg-white hover:bg-gray-100 text-gray-900",
+        label: "Google",
+      },
+      apple: {
+        icon: Apple,
+        color: "bg-black hover:bg-gray-900 border border-gray-600",
+        label: "Apple",
+      },
+    }
+    return configs[provider]
   }
 
   return (
@@ -302,14 +545,42 @@ export default function ProfilePage() {
             <Card className="bg-gray-800 border-gray-700">
               <CardContent className="p-6">
                 <div className="text-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <User className="w-10 h-10 text-white" />
-                  </div>
+                  <Avatar className="w-20 h-20 mx-auto mb-3">
+                    <AvatarImage
+                      src={profile.profilePicture || "/placeholder.svg"}
+                      alt={`${profile.firstName} ${profile.lastName}`}
+                    />
+                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-xl">
+                      {profile.firstName[0]}
+                      {profile.lastName[0]}
+                    </AvatarFallback>
+                  </Avatar>
                   <h2 className="text-xl font-bold text-white">
                     {profile.firstName} {profile.lastName}
                   </h2>
                   <p className="text-gray-300">{profile.jobTitle}</p>
                   <p className="text-sm text-gray-400">{profile.companyName}</p>
+
+                  {/* Social Connection Status */}
+                  <div className="flex justify-center gap-2 mt-3">
+                    {Object.entries(profile.socialConnections).map(([provider, connection]) => {
+                      const config = getSocialButtonConfig(provider as "linkedin" | "google" | "apple")
+                      return (
+                        <div key={provider} className="relative">
+                          <div
+                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                              connection.connected ? config.color : "bg-gray-600"
+                            }`}
+                          >
+                            <config.icon className="w-4 h-4" />
+                          </div>
+                          {connection.connected && (
+                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -381,6 +652,83 @@ export default function ProfilePage() {
                     <Progress value={profile.maturityScore} className="h-2" />
                   </div>
                 </div>
+
+                <Separator className="my-4 bg-gray-700" />
+
+                {/* Data Deletion Section */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-gray-400">Data Management</h4>
+                  <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-red-600 text-red-400 hover:bg-red-900/20 hover:border-red-500 bg-transparent"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete my data
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-gray-800 border-gray-700 text-white">
+                      <DialogHeader>
+                        <DialogTitle className="text-red-400 flex items-center gap-2">
+                          <AlertTriangle className="w-5 h-5" />
+                          Delete all data
+                        </DialogTitle>
+                        <DialogDescription className="text-gray-300">
+                          This action is irreversible and will permanently delete all your data.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="bg-red-900/30 border border-red-700 rounded-lg p-4">
+                          <h4 className="font-semibold text-red-300 mb-2">Data that will be deleted:</h4>
+                          <ul className="text-sm text-red-200 space-y-1">
+                            <li>• Personal and professional profile information</li>
+                            <li>• Team data and organizational chart</li>
+                            <li>• Uploaded documents and analyses</li>
+                            <li>• Report and evaluation history</li>
+                            <li>• Account preferences and settings</li>
+                            <li>• All browsing and usage data</li>
+                          </ul>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="deleteConfirmation" className="text-gray-300">
+                            To confirm, type <strong className="text-red-400">DELETE</strong> below:
+                          </Label>
+                          <Input
+                            id="deleteConfirmation"
+                            value={deleteConfirmation}
+                            onChange={(e) => setDeleteConfirmation(e.target.value)}
+                            placeholder="DELETE"
+                            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          />
+                        </div>
+
+                        <div className="flex gap-3 pt-4">
+                          <Button
+                            onClick={handleDeleteAllData}
+                            disabled={deleteConfirmation !== "DELETE"}
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete permanently
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setIsDeleteModalOpen(false)
+                              setDeleteConfirmation("")
+                            }}
+                            className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -394,54 +742,287 @@ export default function ProfilePage() {
                   className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
                 >
                   <User className="w-4 h-4" />
-                  Profile
+                  <span className="hidden sm:inline">Profile</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="team"
                   className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
                 >
                   <Users className="w-4 h-4" />
-                  Team
+                  <span className="hidden sm:inline">Team</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="maturity"
                   className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
                 >
                   <Target className="w-4 h-4" />
-                  Maturity
+                  <span className="hidden sm:inline">Maturity</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="documents"
                   className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
                 >
                   <FileText className="w-4 h-4" />
-                  Documents
+                  <span className="hidden sm:inline">Documents</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="analytics"
                   className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
                 >
                   <BarChart3 className="w-4 h-4" />
-                  Analytics
+                  <span className="hidden sm:inline">Analytics</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="services"
                   className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
                 >
                   <CreditCard className="w-4 h-4" />
-                  Services
+                  <span className="hidden sm:inline">Services</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="support"
                   className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
                 >
                   <HelpCircle className="w-4 h-4" />
-                  Support
+                  <span className="hidden sm:inline">Support</span>
                 </TabsTrigger>
               </TabsList>
 
               {/* Profile Tab */}
               <TabsContent value="profile" className="space-y-6">
+                {/* Social Connections Section */}
+                <Card className="bg-gray-800 border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Link className="w-5 h-5" />
+                      Social Connections
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-gray-300 text-sm">
+                      Connect your social accounts to automatically enrich your profile and validate your professional
+                      information.
+                    </p>
+
+                    <div className="grid gap-4">
+                      {/* LinkedIn Connection */}
+                      <div className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-[#0077B5] rounded-lg flex items-center justify-center">
+                            <Linkedin className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-white">LinkedIn</h4>
+                            <p className="text-sm text-gray-400">
+                              {profile.socialConnections.linkedin.connected
+                                ? `Connected on ${new Date(profile.socialConnections.linkedin.connectedAt!).toLocaleDateString("fr-FR")}`
+                                : "Sync your professional profile"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {profile.socialConnections.linkedin.connected ? (
+                            <>
+                              <Button
+                                onClick={handleSyncLinkedInData}
+                                disabled={isConnecting === "linkedin"}
+                                size="sm"
+                                className="bg-blue-600 hover:bg-blue-700"
+                              >
+                                {isConnecting === "linkedin" ? (
+                                  <RefreshCw className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <RefreshCw className="w-4 h-4" />
+                                )}
+                              </Button>
+                              <Button
+                                onClick={() => handleSocialDisconnect("linkedin")}
+                                size="sm"
+                                variant="outline"
+                                className="border-red-600 text-red-400 hover:bg-red-900/20"
+                              >
+                                <Unlink className="w-4 h-4" />
+                              </Button>
+                            </>
+                          ) : (
+                            <Button
+                              onClick={() => handleSocialConnect("linkedin")}
+                              disabled={isConnecting === "linkedin"}
+                              size="sm"
+                              className="bg-[#0077B5] hover:bg-[#005885]"
+                            >
+                              {isConnecting === "linkedin" ? (
+                                <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                              ) : (
+                                <Link className="w-4 h-4 mr-2" />
+                              )}
+                              Connect
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Google Connection */}
+                      <div className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                            <Chrome className="w-5 h-5 text-gray-900" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-white">Google</h4>
+                            <p className="text-sm text-gray-400">
+                              {profile.socialConnections.google.connected
+                                ? `Connected on ${new Date(profile.socialConnections.google.connectedAt!).toLocaleDateString("fr-FR")}`
+                                : "Sync with your Google account"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {profile.socialConnections.google.connected ? (
+                            <Button
+                              onClick={() => handleSocialDisconnect("google")}
+                              size="sm"
+                              variant="outline"
+                              className="border-red-600 text-red-400 hover:bg-red-900/20"
+                            >
+                              <Unlink className="w-4 h-4" />
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={() => handleSocialConnect("google")}
+                              disabled={isConnecting === "google"}
+                              size="sm"
+                              className="bg-white hover:bg-gray-100 text-gray-900"
+                            >
+                              {isConnecting === "google" ? (
+                                <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                              ) : (
+                                <Link className="w-4 h-4 mr-2" />
+                              )}
+                              Connect
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Apple Connection */}
+                      <div className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center border border-gray-600">
+                            <Apple className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-white">Apple</h4>
+                            <p className="text-sm text-gray-400">
+                              {profile.socialConnections.apple.connected
+                                ? `Connected on ${new Date(profile.socialConnections.apple.connectedAt!).toLocaleDateString("fr-FR")}`
+                                : "Sync with your Apple ID"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {profile.socialConnections.apple.connected ? (
+                            <Button
+                              onClick={() => handleSocialDisconnect("apple")}
+                              size="sm"
+                              variant="outline"
+                              className="border-red-600 text-red-400 hover:bg-red-900/20"
+                            >
+                              <Unlink className="w-4 h-4" />
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={() => handleSocialConnect("apple")}
+                              disabled={isConnecting === "apple"}
+                              size="sm"
+                              className="bg-black hover:bg-gray-900 border border-gray-600"
+                            >
+                              {isConnecting === "apple" ? (
+                                <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                              ) : (
+                                <Link className="w-4 h-4 mr-2" />
+                              )}
+                              Connect
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* LinkedIn Benefits */}
+                    {!profile.socialConnections.linkedin.connected && (
+                      <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                        <h4 className="font-semibold text-blue-300 mb-2 flex items-center gap-2">
+                          <UserCheck className="w-4 h-4" />
+                          LinkedIn Connection Benefits
+                        </h4>
+                        <ul className="text-sm text-blue-200 space-y-1">
+                          <li>• Automatic profile picture retrieval</li>
+                          <li>• Company affiliation validation</li>
+                          <li>• Professional background synchronization</li>
+                          <li>• Education level and training import</li>
+                          <li>• Colleague company affiliation verification</li>
+                          <li>• Automatic profile validation</li>
+                        </ul>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Professional Experience Section */}
+                {profile.experience.length > 0 && (
+                  <Card className="bg-gray-800 border-gray-700">
+                    <CardHeader>
+                      <CardTitle className="text-white flex items-center gap-2">
+                        <Briefcase className="w-5 h-5" />
+                        Professional Experience
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {profile.experience.map((exp, index) => (
+                          <div key={index} className="border-l-2 border-blue-500 pl-4">
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-semibold text-white">{exp.position}</h4>
+                              {exp.current && <Badge className="bg-green-600 text-white">Current</Badge>}
+                            </div>
+                            <p className="text-blue-400">{exp.company}</p>
+                            <p className="text-sm text-gray-400">
+                              {exp.startDate} - {exp.endDate || "Present"}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Education Section */}
+                {profile.education.length > 0 && (
+                  <Card className="bg-gray-800 border-gray-700">
+                    <CardHeader>
+                      <CardTitle className="text-white flex items-center gap-2">
+                        <GraduationCap className="w-5 h-5" />
+                        Education
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {profile.education.map((edu, index) => (
+                          <div key={index} className="border-l-2 border-purple-500 pl-4">
+                            <h4 className="font-semibold text-white">{edu.degree}</h4>
+                            <p className="text-purple-400">{edu.school}</p>
+                            <p className="text-sm text-gray-400">{edu.field}</p>
+                            <p className="text-sm text-gray-400">
+                              {edu.startYear} - {edu.endYear || "Ongoing"}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
                 <Card className="bg-gray-800 border-gray-700">
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="text-white">Personal Information</CardTitle>

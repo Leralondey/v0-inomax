@@ -173,7 +173,7 @@ export default function ServiceOfferings() {
       {/* Service Overview */}
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Business Intelligence Services</CardTitle>
+          <CardTitle className="text-white">AI-Powered Business Intelligence Services</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -181,22 +181,26 @@ export default function ServiceOfferings() {
               <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Target className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-semibold text-white mb-2">Precise Analysis</h3>
-              <p className="text-sm text-gray-300">Data-driven insights tailored to your business needs and industry</p>
+              <h3 className="font-semibold text-white mb-2">AI-Driven Analysis</h3>
+              <p className="text-sm text-gray-300">
+                Advanced AI algorithms provide deep insights into your business performance
+              </p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-semibold text-white mb-2">Growth Focused</h3>
-              <p className="text-sm text-gray-300">Actionable recommendations to accelerate your business growth</p>
+              <h3 className="font-semibold text-white mb-2">Growth Acceleration</h3>
+              <p className="text-sm text-gray-300">
+                Actionable recommendations to accelerate your business transformation
+              </p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Shield className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-semibold text-white mb-2">Confidential</h3>
-              <p className="text-sm text-gray-300">All analyses include signed NDA for complete data protection</p>
+              <h3 className="font-semibold text-white mb-2">Swiss Quality</h3>
+              <p className="text-sm text-gray-300">Swiss precision and confidentiality with signed NDA protection</p>
             </div>
           </div>
 
@@ -207,16 +211,16 @@ export default function ServiceOfferings() {
                 <h4 className="font-semibold text-yellow-300 mb-2">Why Choose INOMAX.ai?</h4>
                 <ul className="text-sm text-blue-200 space-y-1">
                   <li>
-                    • <strong>Swiss Quality:</strong> Precision and reliability in every analysis
+                    • <strong>AI-Powered:</strong> Advanced machine learning for deeper business insights
                   </li>
                   <li>
-                    • <strong>AI-Powered:</strong> Advanced algorithms for deeper insights
+                    • <strong>Swiss Excellence:</strong> Precision, reliability, and data protection
                   </li>
                   <li>
-                    • <strong>Industry Expertise:</strong> Specialists across multiple sectors
+                    • <strong>Industry Expertise:</strong> Specialists across technology, finance, and healthcare
                   </li>
                   <li>
-                    • <strong>Proven Results:</strong> 500+ successful business transformations
+                    • <strong>Proven Results:</strong> 500+ successful digital transformations
                   </li>
                 </ul>
               </div>
@@ -311,30 +315,30 @@ export default function ServiceOfferings() {
         ))}
       </div>
 
-      {/* Additional Services */}
+      {/* AI Consultation Services */}
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Additional Services</CardTitle>
+          <CardTitle className="text-white">AI Consultation & Implementation Services</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h4 className="font-semibold text-white">Consultation Services</h4>
+              <h4 className="font-semibold text-white">AI Strategy Consulting</h4>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
                   <div className="flex items-center gap-3">
                     <MessageCircle className="w-5 h-5 text-blue-400" />
                     <div>
-                      <p className="font-medium text-white">Strategy Session</p>
-                      <p className="text-sm text-gray-300">60-minute consultation</p>
+                      <p className="font-medium text-white">AI Readiness Assessment</p>
+                      <p className="text-sm text-gray-300">90-minute deep-dive session</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-white">€150</p>
+                    <p className="font-semibold text-white">CHF 200</p>
                     <Button
                       size="sm"
                       className="bg-blue-600 hover:bg-blue-700 text-white mt-1"
-                      onClick={() => window.open("https://cal.com/inomax-ai/strategy", "_blank")}
+                      onClick={() => window.open("https://cal.com/inomax-ai/ai-assessment", "_blank")}
                     >
                       Book Now
                     </Button>
@@ -344,16 +348,16 @@ export default function ServiceOfferings() {
                   <div className="flex items-center gap-3">
                     <Users className="w-5 h-5 text-green-400" />
                     <div>
-                      <p className="font-medium text-white">Team Workshop</p>
-                      <p className="text-sm text-gray-300">Half-day team session</p>
+                      <p className="font-medium text-white">AI Implementation Workshop</p>
+                      <p className="text-sm text-gray-300">Full-day team workshop</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-white">€500</p>
+                    <p className="font-semibold text-white">CHF 800</p>
                     <Button
                       size="sm"
                       className="bg-green-600 hover:bg-green-700 text-white mt-1"
-                      onClick={() => window.open("https://cal.com/inomax-ai/workshop", "_blank")}
+                      onClick={() => window.open("https://cal.com/inomax-ai/ai-workshop", "_blank")}
                     >
                       Schedule
                     </Button>
@@ -363,23 +367,23 @@ export default function ServiceOfferings() {
             </div>
 
             <div className="space-y-4">
-              <h4 className="font-semibold text-white">Support Options</h4>
+              <h4 className="font-semibold text-white">Ongoing AI Support</h4>
               <div className="space-y-3">
                 <div className="p-3 bg-gray-700 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="w-4 h-4 text-blue-400" />
-                    <span className="font-medium text-white">Priority Support</span>
+                    <span className="font-medium text-white">AI Implementation Support</span>
                   </div>
-                  <p className="text-sm text-gray-300 mb-2">24/7 priority email and chat support</p>
-                  <p className="text-sm font-semibold text-blue-400">€99/month</p>
+                  <p className="text-sm text-gray-300 mb-2">24/7 priority support during AI rollout</p>
+                  <p className="text-sm font-semibold text-blue-400">CHF 150/month</p>
                 </div>
                 <div className="p-3 bg-gray-700 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Calendar className="w-4 h-4 text-purple-400" />
-                    <span className="font-medium text-white">Monthly Reviews</span>
+                    <span className="font-medium text-white">AI Performance Reviews</span>
                   </div>
-                  <p className="text-sm text-gray-300 mb-2">Regular business performance reviews</p>
-                  <p className="text-sm font-semibold text-purple-400">€299/month</p>
+                  <p className="text-sm text-gray-300 mb-2">Monthly AI system optimization reviews</p>
+                  <p className="text-sm font-semibold text-purple-400">CHF 400/month</p>
                 </div>
               </div>
             </div>
@@ -390,7 +394,7 @@ export default function ServiceOfferings() {
       {/* Success Stories */}
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Success Stories</CardTitle>
+          <CardTitle className="text-white">AI Transformation Success Stories</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -405,11 +409,12 @@ export default function ServiceOfferings() {
                 </div>
               </div>
               <p className="text-sm text-gray-300 mb-3">
-                "INOMAX.ai helped us identify key growth opportunities that led to a 40% revenue increase in 6 months."
+                "INOMAX.ai's AI implementation helped us automate 60% of our processes, leading to 40% revenue growth in
+                6 months."
               </p>
               <div className="flex items-center gap-4 text-xs text-gray-400">
                 <span>+40% Revenue</span>
-                <span>6 months</span>
+                <span>60% Automation</span>
               </div>
             </div>
 
@@ -424,12 +429,12 @@ export default function ServiceOfferings() {
                 </div>
               </div>
               <p className="text-sm text-gray-300 mb-3">
-                "The comprehensive analysis revealed operational inefficiencies we never noticed. Saved us €200K
-                annually."
+                "AI-powered analytics revealed hidden patterns in patient data, improving treatment outcomes by 35% and
+                saving CHF 300K annually."
               </p>
               <div className="flex items-center gap-4 text-xs text-gray-400">
-                <span>€200K Saved</span>
-                <span>Annual</span>
+                <span>CHF 300K Saved</span>
+                <span>+35% Outcomes</span>
               </div>
             </div>
 
@@ -444,10 +449,11 @@ export default function ServiceOfferings() {
                 </div>
               </div>
               <p className="text-sm text-gray-300 mb-3">
-                "Strategic recommendations helped us secure Series A funding of €5M within 3 months of implementation."
+                "AI-driven risk assessment and strategic recommendations helped secure CHF 8M Series A funding within 3
+                months."
               </p>
               <div className="flex items-center gap-4 text-xs text-gray-400">
-                <span>€5M Funding</span>
+                <span>CHF 8M Funding</span>
                 <span>3 months</span>
               </div>
             </div>

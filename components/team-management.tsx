@@ -6,27 +6,31 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Badge } from "@/components/ui/badge"
 import {
   Users,
-  UserPlus,
+  Plus,
   Mail,
-  Send,
+  UserPlus,
+  Building,
+  Crown,
+  Code,
+  DollarSign,
+  Megaphone,
+  ShoppingCart,
+  Headphones,
+  Settings,
+  Briefcase,
   CheckCircle,
   Clock,
-  X,
-  Building,
+  AlertCircle,
+  Trash2,
+  Eye,
   TrendingUp,
-  BarChart3,
   Target,
   Lightbulb,
-  Shield,
-  Cog,
-  DollarSign,
-  MessageSquare,
-  Award,
-  Eye,
+  Network,
 } from "lucide-react"
 
 interface TeamMember {
@@ -35,47 +39,60 @@ interface TeamMember {
   email: string
   role: string
   department: string
-  status: "invited" | "active" | "pending"
+  status: "active" | "invited" | "pending"
   invitedAt: string
   joinedAt?: string
-  avatar?: string
 }
 
-interface OrgChartNode {
-  id: string
-  name: string
-  role: string
-  department: string
-  status: string
-  children?: OrgChartNode[]
+const roleIcons = {
+  CEO: Crown,
+  CTO: Code,
+  CFO: DollarSign,
+  COO: Settings,
+  CMO: Megaphone,
+  "VP Sales": ShoppingCart,
+  "VP Engineering": Code,
+  "VP Finance": DollarSign,
+  "VP Marketing": Megaphone,
+  "Head of Product": Briefcase,
+  "Head of HR": Users,
+  "Customer Success": Headphones,
 }
 
-const roleOptions = [
-  { value: "ceo", label: "CEO / Founder", icon: Award },
-  { value: "cto", label: "CTO / Tech Lead", icon: Cog },
-  { value: "cfo", label: "CFO / Finance", icon: DollarSign },
-  { value: "cmo", label: "CMO / Marketing", icon: TrendingUp },
-  { value: "coo", label: "COO / Operations", icon: Building },
-  { value: "head-sales", label: "Head of Sales", icon: Target },
-  { value: "head-product", label: "Head of Product", icon: Lightbulb },
-  { value: "head-hr", label: "Head of HR", icon: Users },
-  { value: "head-security", label: "Head of Security", icon: Shield },
-  { value: "manager", label: "Manager", icon: Users },
-  { value: "analyst", label: "Business Analyst", icon: BarChart3 },
-  { value: "consultant", label: "Consultant", icon: MessageSquare },
-  { value: "other", label: "Other", icon: Users },
-]
-
-const departmentOptions = [
+const departments = [
   "Executive",
   "Technology",
   "Finance",
   "Marketing",
   "Sales",
   "Operations",
-  "Product",
   "Human Resources",
-  "Security",
+  "Customer Success",
+  "Product",
+  "Other",
+]
+
+const roles = [
+  "CEO",
+  "CTO",
+  "CFO",
+  "COO",
+  "CMO",
+  "VP Sales",
+  "VP Engineering",
+  "VP Finance",
+  "VP Marketing",
+  "Head of Product",
+  "Head of HR",
+  "Customer Success",
+  "Senior Manager",
+  "Manager",
+  "Team Lead",
+  "Senior Developer",
+  "Developer",
+  "Analyst",
+  "Specialist",
+  "Coordinator",
   "Other",
 ]
 
@@ -85,11 +102,30 @@ export default function TeamManagement() {
       id: "1",
       name: "John Doe",
       email: "john.doe@company.com",
-      role: "ceo",
+      role: "CEO",
       department: "Executive",
       status: "active",
       invitedAt: "2024-01-15",
       joinedAt: "2024-01-15",
+    },
+    {
+      id: "2",
+      name: "Sarah Johnson",
+      email: "sarah.johnson@company.com",
+      role: "CTO",
+      department: "Technology",
+      status: "active",
+      invitedAt: "2024-01-20",
+      joinedAt: "2024-01-22",
+    },
+    {
+      id: "3",
+      name: "Mike Chen",
+      email: "mike.chen@company.com",
+      role: "CFO",
+      department: "Finance",
+      status: "invited",
+      invitedAt: "2024-01-25",
     },
   ])
 
@@ -100,53 +136,45 @@ export default function TeamManagement() {
     role: "",
     department: "",
   })
-  const [isInviting, setIsInviting] = useState(false)
 
   const handleInvite = async () => {
     if (!inviteForm.name || !inviteForm.email || !inviteForm.role || !inviteForm.department) {
       return
     }
 
-    setIsInviting(true)
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      const newMember: TeamMember = {
-        id: Date.now().toString(),
-        name: inviteForm.name,
-        email: inviteForm.email,
-        role: inviteForm.role,
-        department: inviteForm.department,
-        status: "invited",
-        invitedAt: new Date().toISOString().split("T")[0],
-      }
-
-      setTeamMembers((prev) => [...prev, newMember])
-      setInviteForm({ name: "", email: "", role: "", department: "" })
-      setIsInviteModalOpen(false)
-
-      // Show success message
-      alert(`Invitation sent to ${inviteForm.name} (${inviteForm.email})`)
-    } catch (error) {
-      alert("Failed to send invitation. Please try again.")
-    } finally {
-      setIsInviting(false)
+    const newMember: TeamMember = {
+      id: Date.now().toString(),
+      name: inviteForm.name,
+      email: inviteForm.email,
+      role: inviteForm.role,
+      department: inviteForm.department,
+      status: "pending",
+      invitedAt: new Date().toISOString().split("T")[0],
     }
+
+    setTeamMembers((prev) => [...prev, newMember])
+    setInviteForm({ name: "", email: "", role: "", department: "" })
+    setIsInviteModalOpen(false)
+
+    // Simulate sending invitation email
+    console.log("Invitation sent to:", inviteForm.email)
   }
 
-  const removeMember = (id: string) => {
+  const handleRemoveMember = (id: string) => {
     setTeamMembers((prev) => prev.filter((member) => member.id !== id))
   }
 
-  const getRoleLabel = (roleValue: string) => {
-    return roleOptions.find((role) => role.value === roleValue)?.label || roleValue
-  }
-
-  const getRoleIcon = (roleValue: string) => {
-    const roleOption = roleOptions.find((role) => role.value === roleValue)
-    return roleOption ? roleOption.icon : Users
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "active":
+        return <CheckCircle className="w-4 h-4 text-green-400" />
+      case "invited":
+        return <Clock className="w-4 h-4 text-yellow-400" />
+      case "pending":
+        return <AlertCircle className="w-4 h-4 text-orange-400" />
+      default:
+        return null
+    }
   }
 
   const getStatusBadge = (status: string) => {
@@ -154,357 +182,401 @@ export default function TeamManagement() {
       case "active":
         return <Badge className="bg-green-600 text-white border-green-500">Active</Badge>
       case "invited":
-        return <Badge className="bg-blue-600 text-white border-blue-500">Invited</Badge>
+        return <Badge className="bg-yellow-600 text-white border-yellow-500">Invited</Badge>
       case "pending":
         return <Badge className="bg-orange-600 text-white border-orange-500">Pending</Badge>
       default:
-        return <Badge variant="outline">Unknown</Badge>
+        return null
     }
   }
 
-  // Simple org chart representation
-  const renderOrgChart = () => {
-    const groupedByDepartment = teamMembers.reduce(
-      (acc, member) => {
-        if (!acc[member.department]) {
-          acc[member.department] = []
-        }
-        acc[member.department].push(member)
-        return acc
-      },
-      {} as Record<string, TeamMember[]>,
-    )
+  const groupedMembers = teamMembers.reduce(
+    (acc, member) => {
+      if (!acc[member.department]) {
+        acc[member.department] = []
+      }
+      acc[member.department].push(member)
+      return acc
+    },
+    {} as Record<string, TeamMember[]>,
+  )
 
-    return (
-      <div className="space-y-6">
-        {Object.entries(groupedByDepartment).map(([department, members]) => (
-          <div key={department} className="space-y-3">
-            <h4 className="font-semibold text-white flex items-center gap-2">
-              <Building className="w-4 h-4" />
-              {department}
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {members.map((member) => {
-                const RoleIcon = getRoleIcon(member.role)
-                return (
-                  <div
-                    key={member.id}
-                    className="bg-gray-700 border border-gray-600 rounded-lg p-3 hover:bg-gray-600 transition-colors"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                          <RoleIcon className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                          <h5 className="font-medium text-white text-sm">{member.name}</h5>
-                          <p className="text-xs text-gray-400">{getRoleLabel(member.role)}</p>
-                        </div>
-                      </div>
-                      {getStatusBadge(member.status)}
-                    </div>
-                    <p className="text-xs text-gray-300">{member.email}</p>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  }
+  const activeMembers = teamMembers.filter((m) => m.status === "active").length
+  const pendingInvites = teamMembers.filter((m) => m.status !== "active").length
 
   return (
     <div className="space-y-6">
-      {/* Team Overview */}
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-white flex items-center gap-2">
-              <Users className="w-5 h-5" />
-              Team Management
-            </CardTitle>
-            <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Invite Colleague
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-gray-800 border-gray-700 text-white">
-                <DialogHeader>
-                  <DialogTitle className="text-white">Invite Team Member</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-gray-300">
-                      Full Name *
-                    </Label>
-                    <Input
-                      id="name"
-                      value={inviteForm.name}
-                      onChange={(e) => setInviteForm((prev) => ({ ...prev, name: e.target.value }))}
-                      placeholder="John Smith"
-                      className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-gray-300">
-                      Email Address *
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={inviteForm.email}
-                      onChange={(e) => setInviteForm((prev) => ({ ...prev, email: e.target.value }))}
-                      placeholder="john.smith@company.com"
-                      className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="role" className="text-gray-300">
-                      Role / Function *
-                    </Label>
-                    <Select
-                      value={inviteForm.role}
-                      onValueChange={(value) => setInviteForm((prev) => ({ ...prev, role: value }))}
-                    >
-                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                        <SelectValue placeholder="Select role" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600">
-                        {roleOptions.map((role) => (
-                          <SelectItem key={role.value} value={role.value} className="text-white">
-                            <div className="flex items-center gap-2">
-                              <role.icon className="w-4 h-4" />
-                              {role.label}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="department" className="text-gray-300">
-                      Department *
-                    </Label>
-                    <Select
-                      value={inviteForm.department}
-                      onValueChange={(value) => setInviteForm((prev) => ({ ...prev, department: value }))}
-                    >
-                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                        <SelectValue placeholder="Select department" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600">
-                        {departmentOptions.map((dept) => (
-                          <SelectItem key={dept} value={dept} className="text-white">
-                            {dept}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button
-                    onClick={handleInvite}
-                    disabled={
-                      isInviting || !inviteForm.name || !inviteForm.email || !inviteForm.role || !inviteForm.department
-                    }
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    {isInviting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Sending Invitation...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 mr-2" />
-                        Send Invitation
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Users className="w-5 h-5 text-blue-400" />
-                <span className="text-sm text-gray-300">Total Members</span>
+      {/* Header with Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Users className="w-5 h-5 text-white" />
               </div>
-              <div className="text-2xl font-bold text-white">{teamMembers.length}</div>
-            </div>
-            <div className="bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-sm text-gray-300">Active</span>
-              </div>
-              <div className="text-2xl font-bold text-white">
-                {teamMembers.filter((m) => m.status === "active").length}
-              </div>
-            </div>
-            <div className="bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Clock className="w-5 h-5 text-orange-400" />
-                <span className="text-sm text-gray-300">Pending</span>
-              </div>
-              <div className="text-2xl font-bold text-white">
-                {teamMembers.filter((m) => m.status === "invited" || m.status === "pending").length}
-              </div>
-            </div>
-          </div>
-
-          {/* Benefits Section */}
-          <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border border-blue-700 rounded-lg p-4 mb-6">
-            <div className="flex items-start gap-3">
-              <Eye className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
               <div>
-                <h4 className="font-semibold text-blue-300 mb-2">Multi-Perspective Analysis Benefits</h4>
-                <p className="text-sm text-blue-200 mb-3">
-                  By inviting colleagues from different functions, you unlock advanced cross-functional analysis that
-                  provides:
-                </p>
-                <ul className="text-sm text-blue-200 space-y-1">
-                  <li>
-                    • <strong>360° Business View:</strong> Comprehensive insights from all departments
-                  </li>
-                  <li>
-                    • <strong>Role-Specific Recommendations:</strong> Tailored advice for each function
-                  </li>
-                  <li>
-                    • <strong>Cross-Department Synergies:</strong> Identify collaboration opportunities
-                  </li>
-                  <li>
-                    • <strong>Enhanced Report Quality:</strong> More accurate and detailed assessments
-                  </li>
-                  <li>
-                    • <strong>Strategic Alignment:</strong> Ensure all teams work toward common goals
-                  </li>
-                </ul>
+                <p className="text-2xl font-bold text-white">{teamMembers.length}</p>
+                <p className="text-sm text-gray-400">Total Members</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                <CheckCircle className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{activeMembers}</p>
+                <p className="text-sm text-gray-400">Active</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
+                <Clock className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{pendingInvites}</p>
+                <p className="text-sm text-gray-400">Pending</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                <Building className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">{Object.keys(groupedMembers).length}</p>
+                <p className="text-sm text-gray-400">Departments</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Benefits Section */}
+      <Card className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border-blue-700">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center gap-2">
+            <TrendingUp className="w-6 h-6" />
+            Avantages de l'Approche Collaborative
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Eye className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">Analyse Multi-Perspective à 360°</h4>
+                  <p className="text-sm text-gray-300">
+                    Chaque fonction apporte sa vision unique, permettant une évaluation complète de votre maturité
+                    organisationnelle.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Target className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">Recommandations Spécifiques par Fonction</h4>
+                  <p className="text-sm text-gray-300">
+                    Obtenez des conseils personnalisés pour chaque département basés sur leur rôle et responsabilités.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Network className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">Identification des Synergies</h4>
+                  <p className="text-sm text-gray-300">
+                    Découvrez les opportunités de collaboration inter-départements et optimisez vos processus.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Lightbulb className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">Rapports Valorisés</h4>
+                  <p className="text-sm text-gray-300">
+                    Plus votre équipe est complète, plus nos analyses sont précises et nos recommandations pertinentes.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Organization Chart */}
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
-            <Building className="w-5 h-5" />
-            Organization Chart
-          </CardTitle>
-        </CardHeader>
-        <CardContent>{renderOrgChart()}</CardContent>
-      </Card>
+      {/* Invite Button */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-white">Organigramme de l'Équipe</h2>
+          <p className="text-gray-400">Gérez votre équipe et leurs rôles pour des analyses plus précises</p>
+        </div>
+        <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              <UserPlus className="w-4 h-4 mr-2" />
+              Inviter un Collègue
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-gray-800 border-gray-700 text-white">
+            <DialogHeader>
+              <DialogTitle className="text-white">Inviter un Membre de l'Équipe</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-gray-300">
+                  Nom Complet *
+                </Label>
+                <Input
+                  id="name"
+                  value={inviteForm.name}
+                  onChange={(e) => setInviteForm((prev) => ({ ...prev, name: e.target.value }))}
+                  placeholder="Ex: Marie Dupont"
+                  className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                />
+              </div>
 
-      {/* Team Members List */}
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-white">Team Members</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {teamMembers.map((member) => {
-              const RoleIcon = getRoleIcon(member.role)
-              return (
-                <div
-                  key={member.id}
-                  className="flex items-center justify-between p-4 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors"
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-gray-300">
+                  Email Professionnel *
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={inviteForm.email}
+                  onChange={(e) => setInviteForm((prev) => ({ ...prev, email: e.target.value }))}
+                  placeholder="marie.dupont@company.com"
+                  className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="role" className="text-gray-300">
+                  Fonction/Rôle *
+                </Label>
+                <Select
+                  value={inviteForm.role}
+                  onValueChange={(value) => setInviteForm((prev) => ({ ...prev, role: value }))}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                      <RoleIcon className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-white">{member.name}</h4>
-                      <p className="text-sm text-gray-300">{getRoleLabel(member.role)}</p>
-                      <p className="text-xs text-gray-400">{member.department}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Mail className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm text-gray-300">{member.email}</span>
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        {member.status === "active" && member.joinedAt
-                          ? `Joined ${member.joinedAt}`
-                          : `Invited ${member.invitedAt}`}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {getStatusBadge(member.status)}
-                      {member.status === "invited" && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeMember(member.id)}
-                          className="border-red-600 text-red-400 hover:bg-red-900/50 bg-transparent"
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </CardContent>
-      </Card>
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectValue placeholder="Sélectionner une fonction" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    {roles.map((role) => (
+                      <SelectItem key={role} value={role}>
+                        {role}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-      {/* Analysis Impact */}
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
-            <BarChart3 className="w-5 h-5" />
-            Analysis Impact by Role
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-3">
-              <h4 className="font-semibold text-white">Current Team Coverage</h4>
-              {roleOptions
-                .filter((role) => teamMembers.some((member) => member.role === role.value))
-                .map((role) => {
-                  const memberCount = teamMembers.filter((member) => member.role === role.value).length
+              <div className="space-y-2">
+                <Label htmlFor="department" className="text-gray-300">
+                  Département *
+                </Label>
+                <Select
+                  value={inviteForm.department}
+                  onValueChange={(value) => setInviteForm((prev) => ({ ...prev, department: value }))}
+                >
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectValue placeholder="Sélectionner un département" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    {departments.map((dept) => (
+                      <SelectItem key={dept} value={dept}>
+                        {dept}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="bg-blue-900/50 border border-blue-700 rounded-lg p-3">
+                <p className="text-sm text-blue-200">
+                  <strong>Important:</strong> La fonction de votre collègue est cruciale pour générer des analyses
+                  croisées et des recommandations personnalisées par département.
+                </p>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <Button
+                  onClick={handleInvite}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                  disabled={!inviteForm.name || !inviteForm.email || !inviteForm.role || !inviteForm.department}
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Envoyer l'Invitation
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsInviteModalOpen(false)}
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                >
+                  Annuler
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Team Organization Chart */}
+      <div className="space-y-6">
+        {Object.entries(groupedMembers).map(([department, members]) => (
+          <Card key={department} className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Building className="w-5 h-5" />
+                {department}
+                <Badge variant="outline" className="ml-auto text-gray-300 border-gray-600">
+                  {members.length} membre{members.length > 1 ? "s" : ""}
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {members.map((member) => {
+                  const RoleIcon = roleIcons[member.role as keyof typeof roleIcons] || Users
                   return (
-                    <div key={role.value} className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-2">
-                        <role.icon className="w-4 h-4 text-blue-400" />
-                        <span className="text-gray-300">{role.label}</span>
+                    <div
+                      key={member.id}
+                      className="bg-gray-700 rounded-lg p-4 border border-gray-600 hover:border-gray-500 transition-colors"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                            <RoleIcon className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-white">{member.name}</h4>
+                            <p className="text-sm text-gray-300">{member.role}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {getStatusIcon(member.status)}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveMember(member.id)}
+                            className="text-gray-400 hover:text-red-400 hover:bg-red-900/20"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
-                      <Badge className="bg-blue-600 text-white border-blue-500">{memberCount}</Badge>
+
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm text-gray-300">
+                          <Mail className="w-4 h-4" />
+                          <span className="truncate">{member.email}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          {getStatusBadge(member.status)}
+                          <span className="text-xs text-gray-400">
+                            Invité le {new Date(member.invitedAt).toLocaleDateString("fr-FR")}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   )
                 })}
-            </div>
-            <div className="space-y-3">
-              <h4 className="font-semibold text-white">Recommended Additions</h4>
-              {roleOptions
-                .filter((role) => !teamMembers.some((member) => member.role === role.value))
-                .slice(0, 5)
-                .map((role) => (
-                  <div key={role.value} className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2">
-                      <role.icon className="w-4 h-4 text-gray-500" />
-                      <span className="text-gray-400">{role.label}</span>
-                    </div>
-                    <Badge variant="outline" className="border-gray-600 text-gray-400">
-                      Missing
-                    </Badge>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Empty State */}
+      {teamMembers.length === 0 && (
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-12 text-center">
+            <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-white mb-2">Aucun membre d'équipe</h3>
+            <p className="text-gray-400 mb-6">
+              Commencez à constituer votre équipe pour bénéficier d'analyses plus complètes et personnalisées.
+            </p>
+            <Button onClick={() => setIsInviteModalOpen(true)} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Plus className="w-4 h-4 mr-2" />
+              Inviter votre premier collègue
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Recommendations */}
+      {teamMembers.length > 0 && (
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white">Recommandations d'Équipe</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {!teamMembers.some((m) => m.role.includes("CTO") || m.role.includes("Technology")) && (
+                <div className="flex items-start gap-3 p-3 bg-blue-900/30 border border-blue-700 rounded-lg">
+                  <Code className="w-5 h-5 text-blue-400 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-white">Responsable Technique Recommandé</h4>
+                    <p className="text-sm text-gray-300">
+                      Ajoutez un CTO ou responsable technique pour des analyses technologiques approfondies.
+                    </p>
                   </div>
-                ))}
+                </div>
+              )}
+
+              {!teamMembers.some((m) => m.role.includes("CFO") || m.role.includes("Finance")) && (
+                <div className="flex items-start gap-3 p-3 bg-green-900/30 border border-green-700 rounded-lg">
+                  <DollarSign className="w-5 h-5 text-green-400 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-white">Responsable Financier Recommandé</h4>
+                    <p className="text-sm text-gray-300">
+                      Incluez un CFO ou responsable financier pour optimiser vos analyses économiques.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {!teamMembers.some((m) => m.role.includes("Marketing") || m.role.includes("CMO")) && (
+                <div className="flex items-start gap-3 p-3 bg-purple-900/30 border border-purple-700 rounded-lg">
+                  <Megaphone className="w-5 h-5 text-purple-400 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-white">Responsable Marketing Recommandé</h4>
+                    <p className="text-sm text-gray-300">
+                      Ajoutez un responsable marketing pour des insights sur votre stratégie commerciale.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

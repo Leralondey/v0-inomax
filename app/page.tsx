@@ -70,6 +70,12 @@ export default function HomePage() {
             <a href="#about" className="text-gray-300 hover:text-white transition-colors">
               About
             </a>
+            <a href="/help-center" className="text-gray-300 hover:text-white transition-colors">
+              Help
+            </a>
+            <a href="/contact" className="text-gray-300 hover:text-white transition-colors">
+              Contact
+            </a>
           </nav>
           <Button
             onClick={() => setIsSignupModalOpen(true)}
@@ -841,17 +847,17 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4 text-white">Support</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="/help-center" className="hover:text-white transition-colors">
                     Help Center
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="/contact" className="hover:text-white transition-colors">
                     Contact
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="/privacy" className="hover:text-white transition-colors">
                     Privacy
                   </a>
                 </li>
