@@ -410,7 +410,7 @@ export default function LiveChat() {
                 </div>
                 <div className="flex items-center gap-1 text-xs text-gray-400">
                   <Mail className="w-3 h-3" />
-                  <span>selim@dusi.ch</span>
+                  <span>info@inomax.ai</span>
                 </div>
               </div>
             </div>

@@ -301,7 +301,7 @@ export default function PrivacyPage() {
                     <ul className="list-disc list-inside space-y-1 ml-4">
                       <li>Access your profile settings to manage your data preferences</li>
                       <li>Use the "Delete All Data" feature for complete data removal</li>
-                      <li>Contact our Data Protection Officer at privacy@inomax.ai</li>
+                      <li>Contact our Data Protection Officer at info@inomax.ai</li>
                       <li>Submit requests through our secure contact form</li>
                       <li>Call our privacy hotline: +41 79 705 70 37</li>
                     </ul>
@@ -401,7 +401,7 @@ export default function PrivacyPage() {
                     <ul className="list-none space-y-2">
                       <li className="flex items-center gap-2">
                         <Mail className="w-4 h-4" />
-                        <span>privacy@inomax.ai</span>
+                        <span>info@inomax.ai</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <Phone className="w-4 h-4" />
@@ -559,7 +559,7 @@ export default function PrivacyPage() {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:privacy@inomax.ai" className="hover:text-white transition-colors">
+                  <a href="mailto:info@inomax.ai" className="hover:text-white transition-colors">
                     Privacy Team
                   </a>
                 </li>

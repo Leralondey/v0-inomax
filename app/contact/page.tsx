@@ -132,7 +132,7 @@ export default function ContactPage() {
                 <CardTitle className="text-white text-lg">Email</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-300 text-sm mb-1">support@inomax.ai</p>
+                <p className="text-gray-300 text-sm mb-1">info@inomax.ai</p>
                 <p className="text-gray-400 text-xs">Response within 4 hours</p>
               </CardContent>
             </Card>
@@ -493,7 +493,7 @@ export default function ContactPage() {
                   </div>
                   <div className="flex items-center gap-2 text-gray-300">
                     <Mail className="w-4 h-4" />
-                    <span>zurich@inomax.ai</span>
+                    <span>info@inomax.ai</span>
                   </div>
                 </CardContent>
               </Card>
@@ -516,7 +516,7 @@ export default function ContactPage() {
                   </div>
                   <div className="flex items-center gap-2 text-gray-300">
                     <Mail className="w-4 h-4" />
-                    <span>geneva@inomax.ai</span>
+                    <span>info@inomax.ai</span>
                   </div>
                 </CardContent>
               </Card>
@@ -592,7 +592,7 @@ export default function ContactPage() {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:support@inomax.ai" className="hover:text-white transition-colors">
+                  <a href="mailto:info@inomax.ai" className="hover:text-white transition-colors">
                     Email Us
                   </a>
                 </li>

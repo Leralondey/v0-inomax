@@ -434,11 +434,8 @@ export default function HelpCenterPage() {
               <div>
                 <Mail className="w-8 h-8 text-purple-400 mx-auto mb-3" />
                 <h3 className="font-semibold text-white mb-2">Email Support</h3>
-                <p className="text-gray-300 text-sm">
-                  support@inomax.ai
-                  <br />
-                  Response within 4 hours
-                </p>
+                <p className="text-gray-300 text-sm mb-1">info@inomax.ai</p>
+                Response within 4 hours
               </div>
               <div>
                 <Phone className="w-8 h-8 text-green-400 mx-auto mb-3" />
@@ -521,7 +518,7 @@ export default function HelpCenterPage() {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:support@inomax.ai" className="hover:text-white transition-colors">
+                  <a href="mailto:info@inomax.ai" className="hover:text-white transition-colors">
                     Email Us
                   </a>
                 </li>

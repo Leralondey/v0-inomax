@@ -750,7 +750,7 @@ export default function HomePage() {
                     <div className="flex flex-col sm:flex-row gap-4">
                       <div className="flex items-center gap-2 text-gray-300">
                         <Mail className="w-4 h-4" />
-                        <span>selim@dusi.ch</span>
+                        <span>info@inomax.ai</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-300">
                         <Phone className="w-4 h-4" />
@@ -789,7 +789,7 @@ export default function HomePage() {
                 Schedule a Call
               </Button>
             </div>
-            <p className="opacity-75 text-white">Alternatively, email us at support@company.com</p>
+            <p className="opacity-75 text-white">Alternatively, email us at info@inomax.ai</p>
           </div>
         </div>
       </section>
