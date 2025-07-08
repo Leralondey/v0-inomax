@@ -724,8 +724,12 @@ export default function HomePage() {
             <Card className="bg-gray-800 border-gray-700">
               <CardContent className="p-8">
                 <div className="flex flex-col md:flex-row items-center gap-8">
-                  <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-4xl font-bold">
-                    SD
+                  <div className="w-32 h-32 rounded-full overflow-hidden flex-shrink-0">
+                    <img
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-FfQUcryhle23gNfqLpWHhJMl2nk7sP.png"
+                      alt="Selim Dusi - Founder of Inomax.ai"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1 text-center md:text-left">
                     <h3 className="text-2xl font-bold mb-2 text-white">Selim DUSI</h3>
