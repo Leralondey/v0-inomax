@@ -516,11 +516,13 @@ export default function ProfilePage() {
               <CardContent className="p-6">
                 <div className="text-center mb-6">
                   <Avatar className="w-20 h-20 mx-auto mb-3">
-                    <AvatarImage
-                      src={profile.profilePicture || "/placeholder.svg"}
-                      alt={`${profile.firstName} ${profile.lastName}`}
-                    />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-xl">
+                    {profile.profilePicture && (
+                      <AvatarImage
+                        src={profile.profilePicture || "/placeholder.svg"}
+                        alt={`${profile.firstName} ${profile.lastName}`}
+                      />
+                    )}
+                    <AvatarFallback className="bg-gradient-to-br from-purple-500 to-purple-700 text-white text-xl font-semibold">
                       {profile.firstName[0]}
                       {profile.lastName[0]}
                     </AvatarFallback>
@@ -528,8 +530,8 @@ export default function ProfilePage() {
                   <h2 className="text-xl font-bold text-white dark:text-gray-900">
                     {profile.firstName} {profile.lastName}
                   </h2>
-                  <p className="text-gray-300 dark:text-gray-500">{profile.jobTitle}</p>
-                  <p className="text-sm text-gray-400 dark:text-gray-500">{profile.companyName}</p>
+                  <p className="text-gray-300 dark:text-gray-600">{profile.jobTitle}</p>
+                  <p className="text-sm text-gray-400 dark:text-gray-700">{profile.companyName}</p>
 
                   {/* Social Connection Status */}
                   <div className="flex justify-center gap-2 mt-3">
@@ -554,23 +556,23 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-500">
+                  <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-600">
                     <Mail className="w-4 h-4" />
                     <span className="truncate">{profile.email}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-500">
+                  <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-600">
                     <Phone className="w-4 h-4" />
                     <span>{profile.phone}</span>
                     {profile.isPhoneVerified && <CheckCircle className="w-4 h-4 text-green-400" />}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-500">
+                  <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-600">
                     <MapPin className="w-4 h-4" />
                     <span>
                       {profile.city}, {profile.country}
                     </span>
                   </div>
                   {profile.companyWebsite && (
-                    <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-500">
+                    <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-600">
                       <Globe className="w-4 h-4" />
                       <a
                         href={profile.companyWebsite}
@@ -588,7 +590,7 @@ export default function ProfilePage() {
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400 dark:text-gray-500">Profile Status</span>
+                    <span className="text-gray-400 dark:text-gray-600">Profile Status</span>
                     {profile.isProfileVerified ? (
                       <Badge className="bg-green-600 text-white border-green-500">Verified</Badge>
                     ) : (
@@ -598,8 +600,8 @@ export default function ProfilePage() {
                     )}
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400 dark:text-gray-500">Member Since</span>
-                    <span className="text-gray-300 dark:text-gray-500">Jan 2024</span>
+                    <span className="text-gray-400 dark:text-gray-600">Member Since</span>
+                    <span className="text-gray-300 dark:text-gray-600">Jan 2024</span>
                   </div>
                 </div>
 
@@ -608,14 +610,14 @@ export default function ProfilePage() {
                 {/* Maturity Level Display */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400 dark:text-gray-500">Maturity Level</span>
+                    <span className="text-sm text-gray-400 dark:text-gray-600">Maturity Level</span>
                     <Badge className={`${currentMaturityLevel.color} text-white border-0`}>
                       <currentMaturityLevel.icon className="w-3 h-3 mr-1" />
                       {currentMaturityLevel.title}
                     </Badge>
                   </div>
                   <div className="space-y-2">
-                    <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500">
+                    <div className="flex justify-between text-xs text-gray-400 dark:text-gray-600">
                       <span>Score: {profile.maturityScore}/100</span>
                       <span>{Math.round((profile.maturityScore / 100) * 100)}%</span>
                     </div>
@@ -627,7 +629,7 @@ export default function ProfilePage() {
 
                 {/* Data Deletion Section */}
                 <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-gray-400 dark:text-gray-500">Data Management</h4>
+                  <h4 className="text-sm font-medium text-gray-400 dark:text-gray-600">Data Management</h4>
                   <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
                     <DialogTrigger asChild>
                       <Button
@@ -645,14 +647,16 @@ export default function ProfilePage() {
                           <AlertTriangle className="w-5 h-5" />
                           Delete all data
                         </DialogTitle>
-                        <DialogDescription className="text-gray-300 dark:text-gray-500">
+                        <DialogDescription className="text-gray-300 dark:text-gray-600">
                           This action is irreversible and will permanently delete all your data.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4">
-                        <div className="bg-red-900/30 border border-red-700 rounded-lg p-4">
-                          <h4 className="font-semibold text-red-300 mb-2">Data that will be deleted:</h4>
-                          <ul className="text-sm text-red-200 space-y-1">
+                        <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 rounded-lg p-4">
+                          <h4 className="font-semibold text-red-700 dark:text-red-300 mb-2">
+                            Data that will be deleted:
+                          </h4>
+                          <ul className="text-sm text-red-600 dark:text-red-200 space-y-1">
                             <li>• Personal and professional profile information</li>
                             <li>• Team data and organizational chart</li>
                             <li>• Uploaded documents and analyses</li>
@@ -663,7 +667,7 @@ export default function ProfilePage() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="deleteConfirmation" className="text-gray-300 dark:text-gray-500">
+                          <Label htmlFor="deleteConfirmation" className="text-gray-300 dark:text-gray-600">
                             To confirm, type <strong className="text-red-400">DELETE</strong> below:
                           </Label>
                           <Input
@@ -690,7 +694,7 @@ export default function ProfilePage() {
                               setIsDeleteModalOpen(false)
                               setDeleteConfirmation("")
                             }}
-                            className="border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
+                            className="border-gray-600 text-gray-300 dark:text-gray-600 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
                           >
                             Cancel
                           </Button>
@@ -709,49 +713,49 @@ export default function ProfilePage() {
               <TabsList className="grid w-full grid-cols-7 bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                 <TabsTrigger
                   value="profile"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-600 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <User className="w-4 h-4" />
                   <span className="hidden sm:inline">Profile</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="team"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-600 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <Users className="w-4 h-4" />
                   <span className="hidden sm:inline">Team</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="maturity"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-600 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <Target className="w-4 h-4" />
                   <span className="hidden sm:inline">Maturity</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="documents"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-600 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <FileText className="w-4 h-4" />
                   <span className="hidden sm:inline">Documents</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="analytics"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-600 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <BarChart3 className="w-4 h-4" />
                   <span className="hidden sm:inline">Analytics</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="services"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-600 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <CreditCard className="w-4 h-4" />
                   <span className="hidden sm:inline">Services</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="support"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-600 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <HelpCircle className="w-4 h-4" />
                   <span className="hidden sm:inline">Support</span>
@@ -769,7 +773,7 @@ export default function ProfilePage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <p className="text-gray-300 dark:text-gray-500 text-sm">
+                    <p className="text-gray-300 dark:text-gray-600 text-sm">
                       Connect your social accounts to automatically enrich your profile and validate your professional
                       information.
                     </p>
@@ -783,7 +787,7 @@ export default function ProfilePage() {
                           </div>
                           <div>
                             <h4 className="font-medium text-white dark:text-gray-900">LinkedIn</h4>
-                            <p className="text-sm text-gray-400 dark:text-gray-500">
+                            <p className="text-sm text-gray-400 dark:text-gray-600">
                               {profile.socialConnections.linkedin.connected
                                 ? `Connected on ${new Date(profile.socialConnections.linkedin.connectedAt!).toLocaleDateString("fr-FR")}`
                                 : "Sync your professional profile"}
@@ -840,7 +844,7 @@ export default function ProfilePage() {
                           </div>
                           <div>
                             <h4 className="font-medium text-white dark:text-gray-900">Google</h4>
-                            <p className="text-sm text-gray-400 dark:text-gray-500">
+                            <p className="text-sm text-gray-400 dark:text-gray-600">
                               {profile.socialConnections.google.connected
                                 ? `Connected on ${new Date(profile.socialConnections.google.connectedAt!).toLocaleDateString("fr-FR")}`
                                 : "Sync with your Google account"}
@@ -883,7 +887,7 @@ export default function ProfilePage() {
                           </div>
                           <div>
                             <h4 className="font-medium text-white dark:text-gray-900">Apple</h4>
-                            <p className="text-sm text-gray-400 dark:text-gray-500">
+                            <p className="text-sm text-gray-400 dark:text-gray-600">
                               {profile.socialConnections.apple.connected
                                 ? `Connected on ${new Date(profile.socialConnections.apple.connectedAt!).toLocaleDateString("fr-FR")}`
                                 : "Sync with your Apple ID"}
@@ -905,7 +909,7 @@ export default function ProfilePage() {
                               onClick={() => handleSocialConnect("apple")}
                               disabled={isConnecting === "apple"}
                               size="sm"
-                              className="bg-black hover:bg-gray-900 border border-gray-600"
+                              className="bg-black hover:bg-gray-800 dark:bg-black dark:hover:bg-gray-900 border border-gray-300 dark:border-gray-600 text-white"
                             >
                               {isConnecting === "apple" ? (
                                 <RefreshCw className="w-4 h-4 animate-spin mr-2" />
@@ -921,12 +925,12 @@ export default function ProfilePage() {
 
                     {/* LinkedIn Benefits */}
                     {!profile.socialConnections.linkedin.connected && (
-                      <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
-                        <h4 className="font-semibold text-blue-300 mb-2 flex items-center gap-2">
+                      <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+                        <h4 className="font-semibold text-blue-900 dark:text-blue-300 mb-2 flex items-center gap-2">
                           <UserCheck className="w-4 h-4" />
                           LinkedIn Connection Benefits
                         </h4>
-                        <ul className="text-sm text-blue-200 space-y-1">
+                        <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
                           <li>• Automatic profile picture retrieval</li>
                           <li>• Company affiliation validation</li>
                           <li>• Professional background synchronization</li>
@@ -957,7 +961,7 @@ export default function ProfilePage() {
                               {exp.current && <Badge className="bg-green-600 text-white">Current</Badge>}
                             </div>
                             <p className="text-blue-400">{exp.company}</p>
-                            <p className="text-sm text-gray-400 dark:text-gray-500">
+                            <p className="text-sm text-gray-400 dark:text-gray-600">
                               {exp.startDate} - {exp.endDate || "Present"}
                             </p>
                           </div>
@@ -982,8 +986,8 @@ export default function ProfilePage() {
                           <div key={index} className="border-l-2 border-purple-500 pl-4">
                             <h4 className="font-semibold text-white dark:text-gray-900">{edu.degree}</h4>
                             <p className="text-purple-400">{edu.school}</p>
-                            <p className="text-sm text-gray-400 dark:text-gray-500">{edu.field}</p>
-                            <p className="text-sm text-gray-400 dark:text-gray-500">
+                            <p className="text-sm text-gray-400 dark:text-gray-600">{edu.field}</p>
+                            <p className="text-sm text-gray-400 dark:text-gray-600">
                               {edu.startYear} - {edu.endYear || "Ongoing"}
                             </p>
                           </div>
@@ -1003,7 +1007,7 @@ export default function ProfilePage() {
                       className={
                         isEditing
                           ? "bg-blue-600 hover:bg-blue-700"
-                          : "border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200"
+                          : "border-gray-600 dark:border-gray-400 text-gray-300 dark:text-gray-300 hover:bg-gray-700 dark:hover:bg-gray-600 bg-transparent"
                       }
                     >
                       {isSaving ? (
@@ -1027,7 +1031,7 @@ export default function ProfilePage() {
                   <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-gray-300 dark:text-gray-500">
+                        <Label htmlFor="firstName" className="text-gray-300 dark:text-gray-600">
                           First Name *
                         </Label>
                         <Input
@@ -1039,7 +1043,7 @@ export default function ProfilePage() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-gray-300 dark:text-gray-500">
+                        <Label htmlFor="lastName" className="text-gray-300 dark:text-gray-600">
                           Last Name *
                         </Label>
                         <Input
@@ -1051,7 +1055,7 @@ export default function ProfilePage() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-gray-300 dark:text-gray-500">
+                        <Label htmlFor="email" className="text-gray-300 dark:text-gray-600">
                           Email Address *
                         </Label>
                         <Input
@@ -1064,7 +1068,7 @@ export default function ProfilePage() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-gray-300 dark:text-gray-500">
+                        <Label htmlFor="phone" className="text-gray-300 dark:text-gray-600">
                           Phone Number
                         </Label>
                         <div className="flex gap-2">
@@ -1084,7 +1088,7 @@ export default function ProfilePage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
+                              className="border-gray-600 text-gray-300 dark:text-gray-600 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
                             >
                               Verify
                             </Button>
@@ -1099,7 +1103,7 @@ export default function ProfilePage() {
                       <h3 className="text-lg font-medium text-white dark:text-gray-900">Company Information</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <Label htmlFor="companyName" className="text-gray-300 dark:text-gray-500">
+                          <Label htmlFor="companyName" className="text-gray-300 dark:text-gray-600">
                             Company Name *
                           </Label>
                           <Input
@@ -1111,7 +1115,7 @@ export default function ProfilePage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="companyWebsite" className="text-gray-300 dark:text-gray-500">
+                          <Label htmlFor="companyWebsite" className="text-gray-300 dark:text-gray-600">
                             Company Website
                           </Label>
                           <Input
@@ -1124,7 +1128,7 @@ export default function ProfilePage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="jobTitle" className="text-gray-300 dark:text-gray-500">
+                          <Label htmlFor="jobTitle" className="text-gray-300 dark:text-gray-600">
                             Job Title
                           </Label>
                           <Input
@@ -1136,7 +1140,7 @@ export default function ProfilePage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="industry" className="text-gray-300 dark:text-gray-500">
+                          <Label htmlFor="industry" className="text-gray-300 dark:text-gray-600">
                             Industry
                           </Label>
                           <Select
@@ -1159,7 +1163,7 @@ export default function ProfilePage() {
                           </Select>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="companySize" className="text-gray-300 dark:text-gray-500">
+                          <Label htmlFor="companySize" className="text-gray-300 dark:text-gray-600">
                             Company Size
                           </Label>
                           <Select
@@ -1180,7 +1184,7 @@ export default function ProfilePage() {
                           </Select>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="country" className="text-gray-300 dark:text-gray-500">
+                          <Label htmlFor="country" className="text-gray-300 dark:text-gray-600">
                             Country
                           </Label>
                           <Input
@@ -1192,7 +1196,7 @@ export default function ProfilePage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="city" className="text-gray-300 dark:text-gray-500">
+                          <Label htmlFor="city" className="text-gray-300 dark:text-gray-600">
                             City
                           </Label>
                           <Input
@@ -1204,7 +1208,7 @@ export default function ProfilePage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="linkedinProfile" className="text-gray-300 dark:text-gray-500">
+                          <Label htmlFor="linkedinProfile" className="text-gray-300 dark:text-gray-600">
                             LinkedIn Profile
                           </Label>
                           <Input
@@ -1218,7 +1222,7 @@ export default function ProfilePage() {
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="bio" className="text-gray-300 dark:text-gray-500">
+                        <Label htmlFor="bio" className="text-gray-300 dark:text-gray-600">
                           Professional Bio
                         </Label>
                         <Textarea
@@ -1234,12 +1238,14 @@ export default function ProfilePage() {
                     </div>
 
                     {!profile.isProfileVerified && (
-                      <div className="bg-orange-900/50 border border-orange-700 rounded-lg p-4">
+                      <div className="bg-orange-50 dark:bg-orange-900/50 border border-orange-200 dark:border-orange-700 rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-2">
-                          <AlertCircle className="w-5 h-5 text-orange-400" />
-                          <h4 className="font-medium text-orange-300">Profile Verification Required</h4>
+                          <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                          <h4 className="font-medium text-orange-700 dark:text-orange-300">
+                            Profile Verification Required
+                          </h4>
                         </div>
-                        <p className="text-sm text-orange-200 mb-3">
+                        <p className="text-sm text-orange-600 dark:text-orange-200 mb-3">
                           Complete your profile verification to access all premium features and generate comprehensive
                           reports.
                         </p>
@@ -1287,7 +1293,7 @@ export default function ProfilePage() {
                           <h3 className="text-2xl font-bold text-white dark:text-gray-900">
                             {currentMaturityLevel.title}
                           </h3>
-                          <p className="text-gray-300 dark:text-gray-500">{currentMaturityLevel.description}</p>
+                          <p className="text-gray-300 dark:text-gray-600">{currentMaturityLevel.description}</p>
                         </div>
                         <Badge className={`${currentMaturityLevel.color} text-white border-0 text-lg px-4 py-2`}>
                           Score: {profile.maturityScore}/100
@@ -1295,7 +1301,7 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="space-y-2">
-                        <div className="flex justify-between text-sm text-gray-400 dark:text-gray-500">
+                        <div className="flex justify-between text-sm text-gray-400 dark:text-gray-600">
                           <span>Progress</span>
                           <span>{Math.round((profile.maturityScore / 100) * 100)}%</span>
                         </div>
@@ -1307,7 +1313,7 @@ export default function ProfilePage() {
                           <h4 className="font-semibold text-white dark:text-gray-900 mb-3">Current Characteristics</h4>
                           <ul className="space-y-2">
                             {currentMaturityLevel.characteristics.map((characteristic, index) => (
-                              <li key={index} className="flex items-start gap-2 text-gray-300 dark:text-gray-500">
+                              <li key={index} className="flex items-start gap-2 text-gray-300 dark:text-gray-600">
                                 <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                                 <span className="text-sm">{characteristic}</span>
                               </li>
@@ -1319,7 +1325,7 @@ export default function ProfilePage() {
                           <h4 className="font-semibold text-white dark:text-gray-900 mb-3">Recommended Next Steps</h4>
                           <ul className="space-y-2">
                             {currentMaturityLevel.nextSteps.map((step, index) => (
-                              <li key={index} className="flex items-start gap-2 text-gray-300 dark:text-gray-500">
+                              <li key={index} className="flex items-start gap-2 text-gray-300 dark:text-gray-600">
                                 <ArrowRight className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                                 <span className="text-sm">{step}</span>
                               </li>
@@ -1344,7 +1350,7 @@ export default function ProfilePage() {
                           className={`p-4 rounded-lg border transition-colors ${
                             level.level === profile.maturityLevel
                               ? "border-blue-500 bg-blue-900/20"
-                              : "border-gray-600 bg-gray-700/50"
+                              : "border-gray-600 dark:border-gray-300 bg-gray-700/50 dark:bg-gray-50"
                           }`}
                         >
                           <div className="flex items-center justify-between mb-2">
@@ -1354,11 +1360,11 @@ export default function ProfilePage() {
                               </div>
                               <div>
                                 <h4 className="font-semibold text-white dark:text-gray-900">{level.title}</h4>
-                                <p className="text-sm text-gray-300 dark:text-gray-500">{level.description}</p>
+                                <p className="text-sm text-gray-300 dark:text-gray-600">{level.description}</p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="text-sm text-gray-400 dark:text-gray-500">Score Range</div>
+                              <div className="text-sm text-gray-400 dark:text-gray-600">Score Range</div>
                               <div className="font-semibold text-white dark:text-gray-900">
                                 {level.scoreRange[0]}-{level.scoreRange[1]}
                               </div>
@@ -1374,11 +1380,11 @@ export default function ProfilePage() {
                 </Card>
 
                 {/* Assessment CTA */}
-                <Card className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border-blue-700">
+                <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/50 dark:to-purple-900/50 border-blue-200 dark:border-blue-700">
                   <CardContent className="p-6 text-center">
-                    <Zap className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-white dark:text-gray-900 mb-2">Ready to Level Up?</h3>
-                    <p className="text-gray-300 dark:text-gray-500 mb-4">
+                    <Zap className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Ready to Level Up?</h3>
+                    <p className="text-gray-700 dark:text-gray-300 mb-4">
                       Take our comprehensive assessment to get personalized recommendations for advancing to the next
                       maturity stage.
                     </p>
@@ -1416,7 +1422,7 @@ export default function ProfilePage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 dark:text-gray-500 mb-4">
+                      <p className="text-gray-300 dark:text-gray-600 mb-4">
                         Get instant help from our support team. We're available 24/7 to assist you.
                       </p>
                       <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Start Chat</Button>
@@ -1431,7 +1437,7 @@ export default function ProfilePage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 dark:text-gray-500 mb-4">
+                      <p className="text-gray-300 dark:text-gray-600 mb-4">
                         Book a free consultation with our business experts to discuss your needs.
                       </p>
                       <Button
@@ -1451,12 +1457,12 @@ export default function ProfilePage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 dark:text-gray-500 mb-4">
+                      <p className="text-gray-300 dark:text-gray-600 mb-4">
                         Browse our comprehensive guides and documentation.
                       </p>
                       <Button
                         variant="outline"
-                        className="w-full border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
+                        className="w-full border-gray-600 text-gray-300 dark:text-gray-600 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
                       >
                         Browse Articles
                       </Button>
@@ -1471,12 +1477,12 @@ export default function ProfilePage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 dark:text-gray-500 mb-4">
+                      <p className="text-gray-300 dark:text-gray-600 mb-4">
                         Send us an email and we'll get back to you within 24 hours.
                       </p>
                       <Button
                         variant="outline"
-                        className="w-full border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
+                        className="w-full border-gray-600 text-gray-300 dark:text-gray-600 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
                         onClick={() => (window.location.href = "mailto:support@inomax.ai")}
                       >
                         Send Email
@@ -1496,7 +1502,7 @@ export default function ProfilePage() {
                         <h4 className="font-medium text-white dark:text-gray-900 mb-2">
                           How do I generate my free assessment report?
                         </h4>
-                        <p className="text-sm text-gray-300 dark:text-gray-500">
+                        <p className="text-sm text-gray-300 dark:text-gray-600">
                           Navigate to the Services tab and click on "Generate Free Report" in the Starter package. The
                           report will be automatically generated and sent to your email within 5 minutes.
                         </p>
@@ -1505,14 +1511,14 @@ export default function ProfilePage() {
                         <h4 className="font-medium text-white dark:text-gray-900 mb-2">
                           What file types can I upload?
                         </h4>
-                        <p className="text-sm text-gray-300 dark:text-gray-500">
+                        <p className="text-sm text-gray-300 dark:text-gray-600">
                           We support PDF, Word documents, Excel spreadsheets, images (JPG, PNG, GIF), and text files.
                           Maximum file size is 100MB per file.
                         </p>
                       </div>
                       <div className="border-b border-gray-700 dark:border-gray-200 pb-4">
                         <h4 className="font-medium text-white dark:text-gray-900 mb-2">How is my data protected?</h4>
-                        <p className="text-sm text-gray-300 dark:text-gray-500">
+                        <p className="text-sm text-gray-300 dark:text-gray-600">
                           All evaluations are accompanied by a signed NDA, ensuring complete confidentiality. Your data
                           is encrypted and stored securely according to Swiss data protection standards.
                         </p>
@@ -1521,7 +1527,7 @@ export default function ProfilePage() {
                         <h4 className="font-medium text-white dark:text-gray-900 mb-2">
                           Can I upgrade my service package?
                         </h4>
-                        <p className="text-sm text-gray-300 dark:text-gray-500">
+                        <p className="text-sm text-gray-300 dark:text-gray-600">
                           Yes, you can upgrade to any premium package at any time. Contact our support team or book a
                           consultation to discuss the best option for your needs.
                         </p>

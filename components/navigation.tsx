@@ -24,7 +24,7 @@ export function Navigation() {
   const [userProfile, setUserProfile] = useState({
     name: "John Doe",
     email: "john.doe@company.com",
-    avatar: "/placeholder.svg?height=32&width=32",
+    avatar: null, // Pas d'image de profil pour tester les initiales
   })
 
   const handleLogout = () => {
@@ -37,12 +37,14 @@ export function Navigation() {
       <header className="border-b border-gray-800 dark:border-gray-200 bg-gray-900/95 dark:bg-gray-50/95 backdrop-blur supports-[backdrop-filter]:bg-gray-900/60 dark:supports-[backdrop-filter]:bg-gray-50/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              INOMAX.ai
-            </span>
+            <a href="/" className="flex items-center space-x-2 cursor-pointer">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                INOMAX.ai
+              </span>
+            </a>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
             <a
@@ -91,8 +93,10 @@ export function Navigation() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={userProfile.avatar || "/placeholder.svg"} alt={userProfile.name} />
-                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-sm">
+                      {userProfile.avatar && (
+                        <AvatarImage src={userProfile.avatar || "/placeholder.svg"} alt={userProfile.name} />
+                      )}
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-sm font-bold">
                         {userProfile.name
                           .split(" ")
                           .map((n) => n[0])
@@ -213,8 +217,10 @@ export function Navigation() {
                 <div className="pt-4 border-t border-gray-800 dark:border-gray-200">
                   <div className="flex items-center gap-3 mb-4">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={userProfile.avatar || "/placeholder.svg"} alt={userProfile.name} />
-                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-sm">
+                      {userProfile.avatar && (
+                        <AvatarImage src={userProfile.avatar || "/placeholder.svg"} alt={userProfile.name} />
+                      )}
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-sm font-bold">
                         {userProfile.name
                           .split(" ")
                           .map((n) => n[0])
