@@ -13,6 +13,7 @@ import { BarChart3, Menu, User, Settings, LogOut, Shield } from "lucide-react"
 import { useState } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import SignupModal from "@/components/signup-modal"
+import Link from "next/link"
 
 export function Navigation() {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
@@ -37,52 +38,46 @@ export function Navigation() {
       <header className="border-b border-gray-800 dark:border-gray-200 bg-gray-900/95 dark:bg-gray-50/95 backdrop-blur supports-[backdrop-filter]:bg-gray-900/60 dark:supports-[backdrop-filter]:bg-gray-50/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <a href="/" className="flex items-center space-x-2 cursor-pointer">
+            <Link href="/" className="flex items-center space-x-2 cursor-pointer">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                 <BarChart3 className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 INOMAX.ai
               </span>
-            </a>
+            </Link>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
-            <a
+            <Link
               href="/#features"
-              className="text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Features
-            </a>
-            <a
+            </Link>
+            <Link
               href="/#solutions"
-              className="text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Solutions
-            </a>
-            <a
+            </Link>
+            <Link
               href="/#pricing"
-              className="text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Pricing
-            </a>
-            <a
-              href="/#about"
-              className="text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
-            >
-              About
-            </a>
-            <a
+            </Link>
+            <Link
               href="/help-center"
-              className="text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Help
-            </a>
-            <a
+            </Link>
+            <Link
               href="/contact"
-              className="text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Contact
-            </a>
+            </Link>
           </nav>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
@@ -118,13 +113,13 @@ export function Navigation() {
                   </div>
                   <DropdownMenuSeparator className="bg-gray-700 dark:bg-gray-200" />
                   <DropdownMenuItem asChild>
-                    <a
+                    <Link
                       href="/profile"
                       className="flex items-center text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-100"
                     >
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile</span>
-                    </a>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-100">
                     <Settings className="mr-2 h-4 w-4" />
@@ -132,13 +127,13 @@ export function Navigation() {
                   </DropdownMenuItem>
                   {userRole === "admin" && (
                     <DropdownMenuItem asChild>
-                      <a
+                      <Link
                         href="/admin"
                         className="flex items-center text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-100"
                       >
                         <Shield className="mr-2 h-4 w-4" />
                         <span>Administration</span>
-                      </a>
+                      </Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator className="bg-gray-700 dark:bg-gray-200" />
@@ -167,6 +162,7 @@ export function Navigation() {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle menu</span>
             </Button>
           </div>
         </div>
@@ -175,92 +171,39 @@ export function Navigation() {
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-gray-800 dark:border-gray-200 bg-gray-900 dark:bg-gray-50">
             <div className="px-4 py-4 space-y-4">
-              <a
+              <Link
                 href="/#features"
                 className="block text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
               >
                 Features
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/#solutions"
                 className="block text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
               >
                 Solutions
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/#pricing"
                 className="block text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
               >
                 Pricing
-              </a>
-              <a
-                href="/#about"
-                className="block text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
-              >
-                About
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/help-center"
                 className="block text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
               >
                 Help
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/contact"
                 className="block text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors"
               >
                 Contact
-              </a>
+              </Link>
 
               {/* Mobile Profile Section */}
-              {isAuthenticated ? (
-                <div className="pt-4 border-t border-gray-800 dark:border-gray-200">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Avatar className="h-8 w-8">
-                      {userProfile.avatar && (
-                        <AvatarImage src={userProfile.avatar || "/placeholder.svg"} alt={userProfile.name} />
-                      )}
-                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-sm font-bold">
-                        {userProfile.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium text-white dark:text-gray-900">{userProfile.name}</p>
-                      <p className="text-sm text-gray-300 dark:text-gray-500">{userProfile.email}</p>
-                    </div>
-                  </div>
-                  <a
-                    href="/profile"
-                    className="flex items-center gap-2 text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors py-2"
-                  >
-                    <User className="h-4 w-4" />
-                    Profile
-                  </a>
-                  <div className="flex items-center gap-2 text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors py-2">
-                    <Settings className="h-4 w-4" />
-                    Settings
-                  </div>
-                  {userRole === "admin" && (
-                    <a
-                      href="/admin"
-                      className="flex items-center gap-2 text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-gray-900 transition-colors py-2"
-                    >
-                      <Shield className="h-4 w-4" />
-                      Administration
-                    </a>
-                  )}
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 text-red-400 dark:text-red-600 hover:text-red-300 dark:hover:text-red-700 transition-colors py-2 w-full text-left"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Log out
-                  </button>
-                </div>
-              ) : (
+              {!isAuthenticated && (
                 <Button
                   onClick={() => setIsSignupModalOpen(true)}
                   className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0"
