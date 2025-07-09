@@ -36,7 +36,6 @@ import {
   MessageCircle,
   HelpCircle,
   Shield,
-  Bell,
   CreditCard,
   Target,
   TrendingUp,
@@ -66,6 +65,7 @@ import DocumentManager from "@/components/document-manager"
 import SupersetDashboard from "@/components/superset-dashboard"
 import ServiceOfferings from "@/components/service-offerings"
 import TeamManagement from "@/components/team-management"
+import { Navigation } from "@/components/navigation"
 
 interface SocialConnection {
   provider: "linkedin" | "google" | "apple"
@@ -503,46 +503,16 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gray-900 dark:bg-gray-50 text-white dark:text-gray-900">
       {/* Header */}
-      <div className="bg-gray-900 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  INOMAX.ai
-                </h1>
-                <p className="text-sm text-gray-400">Business Intelligence Platform</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Badge className="bg-green-600 text-white border-green-500">
-                <CheckCircle className="w-4 h-4 mr-1" />
-                Active Account
-              </Badge>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-gray-600 text-gray-300 hover:bg-gray-800 bg-transparent"
-              >
-                <Bell className="w-4 h-4 mr-2" />
-                Notifications
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Navigation />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
               <CardContent className="p-6">
                 <div className="text-center mb-6">
                   <Avatar className="w-20 h-20 mx-auto mb-3">
@@ -555,11 +525,11 @@ export default function ProfilePage() {
                       {profile.lastName[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <h2 className="text-xl font-bold text-white">
+                  <h2 className="text-xl font-bold text-white dark:text-gray-900">
                     {profile.firstName} {profile.lastName}
                   </h2>
-                  <p className="text-gray-300">{profile.jobTitle}</p>
-                  <p className="text-sm text-gray-400">{profile.companyName}</p>
+                  <p className="text-gray-300 dark:text-gray-500">{profile.jobTitle}</p>
+                  <p className="text-sm text-gray-400 dark:text-gray-500">{profile.companyName}</p>
 
                   {/* Social Connection Status */}
                   <div className="flex justify-center gap-2 mt-3">
@@ -575,7 +545,7 @@ export default function ProfilePage() {
                             <config.icon className="w-4 h-4" />
                           </div>
                           {connection.connected && (
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>
+                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800 dark:border-white"></div>
                           )}
                         </div>
                       )
@@ -584,23 +554,23 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-500">
                     <Mail className="w-4 h-4" />
                     <span className="truncate">{profile.email}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-500">
                     <Phone className="w-4 h-4" />
                     <span>{profile.phone}</span>
                     {profile.isPhoneVerified && <CheckCircle className="w-4 h-4 text-green-400" />}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-500">
                     <MapPin className="w-4 h-4" />
                     <span>
                       {profile.city}, {profile.country}
                     </span>
                   </div>
                   {profile.companyWebsite && (
-                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                    <div className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-500">
                       <Globe className="w-4 h-4" />
                       <a
                         href={profile.companyWebsite}
@@ -614,11 +584,11 @@ export default function ProfilePage() {
                   )}
                 </div>
 
-                <Separator className="my-4 bg-gray-700" />
+                <Separator className="my-4 bg-gray-700 dark:bg-gray-200" />
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Profile Status</span>
+                    <span className="text-gray-400 dark:text-gray-500">Profile Status</span>
                     {profile.isProfileVerified ? (
                       <Badge className="bg-green-600 text-white border-green-500">Verified</Badge>
                     ) : (
@@ -628,24 +598,24 @@ export default function ProfilePage() {
                     )}
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Member Since</span>
-                    <span className="text-gray-300">Jan 2024</span>
+                    <span className="text-gray-400 dark:text-gray-500">Member Since</span>
+                    <span className="text-gray-300 dark:text-gray-500">Jan 2024</span>
                   </div>
                 </div>
 
-                <Separator className="my-4 bg-gray-700" />
+                <Separator className="my-4 bg-gray-700 dark:bg-gray-200" />
 
                 {/* Maturity Level Display */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400">Maturity Level</span>
+                    <span className="text-sm text-gray-400 dark:text-gray-500">Maturity Level</span>
                     <Badge className={`${currentMaturityLevel.color} text-white border-0`}>
                       <currentMaturityLevel.icon className="w-3 h-3 mr-1" />
                       {currentMaturityLevel.title}
                     </Badge>
                   </div>
                   <div className="space-y-2">
-                    <div className="flex justify-between text-xs text-gray-400">
+                    <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500">
                       <span>Score: {profile.maturityScore}/100</span>
                       <span>{Math.round((profile.maturityScore / 100) * 100)}%</span>
                     </div>
@@ -653,11 +623,11 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <Separator className="my-4 bg-gray-700" />
+                <Separator className="my-4 bg-gray-700 dark:bg-gray-200" />
 
                 {/* Data Deletion Section */}
                 <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-gray-400">Data Management</h4>
+                  <h4 className="text-sm font-medium text-gray-400 dark:text-gray-500">Data Management</h4>
                   <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
                     <DialogTrigger asChild>
                       <Button
@@ -669,13 +639,13 @@ export default function ProfilePage() {
                         Delete my data
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-gray-800 border-gray-700 text-white">
+                    <DialogContent className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200 text-white dark:text-gray-900">
                       <DialogHeader>
                         <DialogTitle className="text-red-400 flex items-center gap-2">
                           <AlertTriangle className="w-5 h-5" />
                           Delete all data
                         </DialogTitle>
-                        <DialogDescription className="text-gray-300">
+                        <DialogDescription className="text-gray-300 dark:text-gray-500">
                           This action is irreversible and will permanently delete all your data.
                         </DialogDescription>
                       </DialogHeader>
@@ -693,7 +663,7 @@ export default function ProfilePage() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="deleteConfirmation" className="text-gray-300">
+                          <Label htmlFor="deleteConfirmation" className="text-gray-300 dark:text-gray-500">
                             To confirm, type <strong className="text-red-400">DELETE</strong> below:
                           </Label>
                           <Input
@@ -701,7 +671,7 @@ export default function ProfilePage() {
                             value={deleteConfirmation}
                             onChange={(e) => setDeleteConfirmation(e.target.value)}
                             placeholder="DELETE"
-                            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                           />
                         </div>
 
@@ -720,7 +690,7 @@ export default function ProfilePage() {
                               setIsDeleteModalOpen(false)
                               setDeleteConfirmation("")
                             }}
-                            className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                            className="border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
                           >
                             Cancel
                           </Button>
@@ -736,52 +706,52 @@ export default function ProfilePage() {
           {/* Main Content Area */}
           <div className="lg:col-span-3">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-7 bg-gray-800 border-gray-700">
+              <TabsList className="grid w-full grid-cols-7 bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                 <TabsTrigger
                   value="profile"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <User className="w-4 h-4" />
                   <span className="hidden sm:inline">Profile</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="team"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <Users className="w-4 h-4" />
                   <span className="hidden sm:inline">Team</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="maturity"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <Target className="w-4 h-4" />
                   <span className="hidden sm:inline">Maturity</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="documents"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <FileText className="w-4 h-4" />
                   <span className="hidden sm:inline">Documents</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="analytics"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <BarChart3 className="w-4 h-4" />
                   <span className="hidden sm:inline">Analytics</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="services"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <CreditCard className="w-4 h-4" />
                   <span className="hidden sm:inline">Services</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="support"
-                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 text-gray-300 data-[state=active]:text-white"
+                  className="flex items-center gap-2 data-[state=active]:bg-gray-700 dark:data-[state=active]:bg-gray-100 text-gray-300 dark:text-gray-500 data-[state=active]:text-white dark:data-[state=active]:text-gray-900"
                 >
                   <HelpCircle className="w-4 h-4" />
                   <span className="hidden sm:inline">Support</span>
@@ -791,29 +761,29 @@ export default function ProfilePage() {
               {/* Profile Tab */}
               <TabsContent value="profile" className="space-y-6">
                 {/* Social Connections Section */}
-                <Card className="bg-gray-800 border-gray-700">
+                <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                   <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2">
+                    <CardTitle className="text-white dark:text-gray-900 flex items-center gap-2">
                       <Link className="w-5 h-5" />
                       Social Connections
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <p className="text-gray-300 text-sm">
+                    <p className="text-gray-300 dark:text-gray-500 text-sm">
                       Connect your social accounts to automatically enrich your profile and validate your professional
                       information.
                     </p>
 
                     <div className="grid gap-4">
                       {/* LinkedIn Connection */}
-                      <div className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
+                      <div className="flex items-center justify-between p-4 bg-gray-700 dark:bg-gray-100 rounded-lg">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-[#0077B5] rounded-lg flex items-center justify-center">
                             <Linkedin className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <h4 className="font-medium text-white">LinkedIn</h4>
-                            <p className="text-sm text-gray-400">
+                            <h4 className="font-medium text-white dark:text-gray-900">LinkedIn</h4>
+                            <p className="text-sm text-gray-400 dark:text-gray-500">
                               {profile.socialConnections.linkedin.connected
                                 ? `Connected on ${new Date(profile.socialConnections.linkedin.connectedAt!).toLocaleDateString("fr-FR")}`
                                 : "Sync your professional profile"}
@@ -863,14 +833,14 @@ export default function ProfilePage() {
                       </div>
 
                       {/* Google Connection */}
-                      <div className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
+                      <div className="flex items-center justify-between p-4 bg-gray-700 dark:bg-gray-100 rounded-lg">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
                             <Chrome className="w-5 h-5 text-gray-900" />
                           </div>
                           <div>
-                            <h4 className="font-medium text-white">Google</h4>
-                            <p className="text-sm text-gray-400">
+                            <h4 className="font-medium text-white dark:text-gray-900">Google</h4>
+                            <p className="text-sm text-gray-400 dark:text-gray-500">
                               {profile.socialConnections.google.connected
                                 ? `Connected on ${new Date(profile.socialConnections.google.connectedAt!).toLocaleDateString("fr-FR")}`
                                 : "Sync with your Google account"}
@@ -906,14 +876,14 @@ export default function ProfilePage() {
                       </div>
 
                       {/* Apple Connection */}
-                      <div className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
+                      <div className="flex items-center justify-between p-4 bg-gray-700 dark:bg-gray-100 rounded-lg">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center border border-gray-600">
                             <Apple className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <h4 className="font-medium text-white">Apple</h4>
-                            <p className="text-sm text-gray-400">
+                            <h4 className="font-medium text-white dark:text-gray-900">Apple</h4>
+                            <p className="text-sm text-gray-400 dark:text-gray-500">
                               {profile.socialConnections.apple.connected
                                 ? `Connected on ${new Date(profile.socialConnections.apple.connectedAt!).toLocaleDateString("fr-FR")}`
                                 : "Sync with your Apple ID"}
@@ -971,9 +941,9 @@ export default function ProfilePage() {
 
                 {/* Professional Experience Section */}
                 {profile.experience.length > 0 && (
-                  <Card className="bg-gray-800 border-gray-700">
+                  <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                     <CardHeader>
-                      <CardTitle className="text-white flex items-center gap-2">
+                      <CardTitle className="text-white dark:text-gray-900 flex items-center gap-2">
                         <Briefcase className="w-5 h-5" />
                         Professional Experience
                       </CardTitle>
@@ -983,11 +953,11 @@ export default function ProfilePage() {
                         {profile.experience.map((exp, index) => (
                           <div key={index} className="border-l-2 border-blue-500 pl-4">
                             <div className="flex items-center justify-between">
-                              <h4 className="font-semibold text-white">{exp.position}</h4>
+                              <h4 className="font-semibold text-white dark:text-gray-900">{exp.position}</h4>
                               {exp.current && <Badge className="bg-green-600 text-white">Current</Badge>}
                             </div>
                             <p className="text-blue-400">{exp.company}</p>
-                            <p className="text-sm text-gray-400">
+                            <p className="text-sm text-gray-400 dark:text-gray-500">
                               {exp.startDate} - {exp.endDate || "Present"}
                             </p>
                           </div>
@@ -999,9 +969,9 @@ export default function ProfilePage() {
 
                 {/* Education Section */}
                 {profile.education.length > 0 && (
-                  <Card className="bg-gray-800 border-gray-700">
+                  <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                     <CardHeader>
-                      <CardTitle className="text-white flex items-center gap-2">
+                      <CardTitle className="text-white dark:text-gray-900 flex items-center gap-2">
                         <GraduationCap className="w-5 h-5" />
                         Education
                       </CardTitle>
@@ -1010,10 +980,10 @@ export default function ProfilePage() {
                       <div className="space-y-4">
                         {profile.education.map((edu, index) => (
                           <div key={index} className="border-l-2 border-purple-500 pl-4">
-                            <h4 className="font-semibold text-white">{edu.degree}</h4>
+                            <h4 className="font-semibold text-white dark:text-gray-900">{edu.degree}</h4>
                             <p className="text-purple-400">{edu.school}</p>
-                            <p className="text-sm text-gray-400">{edu.field}</p>
-                            <p className="text-sm text-gray-400">
+                            <p className="text-sm text-gray-400 dark:text-gray-500">{edu.field}</p>
+                            <p className="text-sm text-gray-400 dark:text-gray-500">
                               {edu.startYear} - {edu.endYear || "Ongoing"}
                             </p>
                           </div>
@@ -1023,15 +993,17 @@ export default function ProfilePage() {
                   </Card>
                 )}
 
-                <Card className="bg-gray-800 border-gray-700">
+                <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                   <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle className="text-white">Personal Information</CardTitle>
+                    <CardTitle className="text-white dark:text-gray-900">Personal Information</CardTitle>
                     <Button
                       variant={isEditing ? "default" : "outline"}
                       onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
                       disabled={isSaving}
                       className={
-                        isEditing ? "bg-blue-600 hover:bg-blue-700" : "border-gray-600 text-gray-300 hover:bg-gray-700"
+                        isEditing
+                          ? "bg-blue-600 hover:bg-blue-700"
+                          : "border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200"
                       }
                     >
                       {isSaving ? (
@@ -1055,7 +1027,7 @@ export default function ProfilePage() {
                   <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-gray-300">
+                        <Label htmlFor="firstName" className="text-gray-300 dark:text-gray-500">
                           First Name *
                         </Label>
                         <Input
@@ -1063,11 +1035,11 @@ export default function ProfilePage() {
                           value={profile.firstName}
                           onChange={(e) => setProfile((prev) => ({ ...prev, firstName: e.target.value }))}
                           disabled={!isEditing}
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-gray-300">
+                        <Label htmlFor="lastName" className="text-gray-300 dark:text-gray-500">
                           Last Name *
                         </Label>
                         <Input
@@ -1075,11 +1047,11 @@ export default function ProfilePage() {
                           value={profile.lastName}
                           onChange={(e) => setProfile((prev) => ({ ...prev, lastName: e.target.value }))}
                           disabled={!isEditing}
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-gray-300">
+                        <Label htmlFor="email" className="text-gray-300 dark:text-gray-500">
                           Email Address *
                         </Label>
                         <Input
@@ -1088,11 +1060,11 @@ export default function ProfilePage() {
                           value={profile.email}
                           onChange={(e) => setProfile((prev) => ({ ...prev, email: e.target.value }))}
                           disabled={!isEditing}
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-gray-300">
+                        <Label htmlFor="phone" className="text-gray-300 dark:text-gray-500">
                           Phone Number
                         </Label>
                         <div className="flex gap-2">
@@ -1101,7 +1073,7 @@ export default function ProfilePage() {
                             value={profile.phone}
                             onChange={(e) => setProfile((prev) => ({ ...prev, phone: e.target.value }))}
                             disabled={!isEditing}
-                            className="flex-grow bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            className="flex-grow bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                           />
                           {profile.isPhoneVerified ? (
                             <Badge className="bg-green-600 text-white border-green-500 px-3 py-2">
@@ -1112,7 +1084,7 @@ export default function ProfilePage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                              className="border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
                             >
                               Verify
                             </Button>
@@ -1121,13 +1093,13 @@ export default function ProfilePage() {
                       </div>
                     </div>
 
-                    <Separator className="bg-gray-700" />
+                    <Separator className="bg-gray-700 dark:bg-gray-200" />
 
                     <div className="space-y-6">
-                      <h3 className="text-lg font-medium text-white">Company Information</h3>
+                      <h3 className="text-lg font-medium text-white dark:text-gray-900">Company Information</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <Label htmlFor="companyName" className="text-gray-300">
+                          <Label htmlFor="companyName" className="text-gray-300 dark:text-gray-500">
                             Company Name *
                           </Label>
                           <Input
@@ -1135,11 +1107,11 @@ export default function ProfilePage() {
                             value={profile.companyName}
                             onChange={(e) => setProfile((prev) => ({ ...prev, companyName: e.target.value }))}
                             disabled={!isEditing}
-                            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="companyWebsite" className="text-gray-300">
+                          <Label htmlFor="companyWebsite" className="text-gray-300 dark:text-gray-500">
                             Company Website
                           </Label>
                           <Input
@@ -1148,11 +1120,11 @@ export default function ProfilePage() {
                             onChange={(e) => setProfile((prev) => ({ ...prev, companyWebsite: e.target.value }))}
                             disabled={!isEditing}
                             placeholder="https://example.com"
-                            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="jobTitle" className="text-gray-300">
+                          <Label htmlFor="jobTitle" className="text-gray-300 dark:text-gray-500">
                             Job Title
                           </Label>
                           <Input
@@ -1160,11 +1132,11 @@ export default function ProfilePage() {
                             value={profile.jobTitle}
                             onChange={(e) => setProfile((prev) => ({ ...prev, jobTitle: e.target.value }))}
                             disabled={!isEditing}
-                            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="industry" className="text-gray-300">
+                          <Label htmlFor="industry" className="text-gray-300 dark:text-gray-500">
                             Industry
                           </Label>
                           <Select
@@ -1172,10 +1144,10 @@ export default function ProfilePage() {
                             onValueChange={(value) => setProfile((prev) => ({ ...prev, industry: value }))}
                             disabled={!isEditing}
                           >
-                            <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                            <SelectTrigger className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900">
                               <SelectValue placeholder="Select industry" />
                             </SelectTrigger>
-                            <SelectContent className="bg-gray-700 border-gray-600">
+                            <SelectContent className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300">
                               <SelectItem value="Technology">Technology</SelectItem>
                               <SelectItem value="Finance">Finance</SelectItem>
                               <SelectItem value="Healthcare">Healthcare</SelectItem>
@@ -1187,7 +1159,7 @@ export default function ProfilePage() {
                           </Select>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="companySize" className="text-gray-300">
+                          <Label htmlFor="companySize" className="text-gray-300 dark:text-gray-500">
                             Company Size
                           </Label>
                           <Select
@@ -1195,10 +1167,10 @@ export default function ProfilePage() {
                             onValueChange={(value) => setProfile((prev) => ({ ...prev, companySize: value }))}
                             disabled={!isEditing}
                           >
-                            <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                            <SelectTrigger className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900">
                               <SelectValue placeholder="Select company size" />
                             </SelectTrigger>
-                            <SelectContent className="bg-gray-700 border-gray-600">
+                            <SelectContent className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300">
                               <SelectItem value="1-10">1-10 employees</SelectItem>
                               <SelectItem value="11-50">11-50 employees</SelectItem>
                               <SelectItem value="51-200">51-200 employees</SelectItem>
@@ -1208,7 +1180,7 @@ export default function ProfilePage() {
                           </Select>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="country" className="text-gray-300">
+                          <Label htmlFor="country" className="text-gray-300 dark:text-gray-500">
                             Country
                           </Label>
                           <Input
@@ -1216,11 +1188,11 @@ export default function ProfilePage() {
                             value={profile.country}
                             onChange={(e) => setProfile((prev) => ({ ...prev, country: e.target.value }))}
                             disabled={!isEditing}
-                            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="city" className="text-gray-300">
+                          <Label htmlFor="city" className="text-gray-300 dark:text-gray-500">
                             City
                           </Label>
                           <Input
@@ -1228,11 +1200,11 @@ export default function ProfilePage() {
                             value={profile.city}
                             onChange={(e) => setProfile((prev) => ({ ...prev, city: e.target.value }))}
                             disabled={!isEditing}
-                            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="linkedinProfile" className="text-gray-300">
+                          <Label htmlFor="linkedinProfile" className="text-gray-300 dark:text-gray-500">
                             LinkedIn Profile
                           </Label>
                           <Input
@@ -1241,12 +1213,12 @@ export default function ProfilePage() {
                             onChange={(e) => setProfile((prev) => ({ ...prev, linkedinProfile: e.target.value }))}
                             disabled={!isEditing}
                             placeholder="https://linkedin.com/in/yourprofile"
-                            className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                           />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="bio" className="text-gray-300">
+                        <Label htmlFor="bio" className="text-gray-300 dark:text-gray-500">
                           Professional Bio
                         </Label>
                         <Textarea
@@ -1256,7 +1228,7 @@ export default function ProfilePage() {
                           disabled={!isEditing}
                           rows={4}
                           placeholder="Tell us about your professional background and experience..."
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          className="bg-gray-700 dark:bg-gray-100 border-gray-600 dark:border-gray-300 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                         />
                       </div>
                     </div>
@@ -1282,9 +1254,9 @@ export default function ProfilePage() {
 
                 {/* Phone Verification Section */}
                 {!profile.isPhoneVerified && (
-                  <Card className="bg-gray-800 border-gray-700">
+                  <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                     <CardHeader>
-                      <CardTitle className="text-white">Phone Verification</CardTitle>
+                      <CardTitle className="text-white dark:text-gray-900">Phone Verification</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <PhoneVerifier />
@@ -1301,9 +1273,9 @@ export default function ProfilePage() {
               {/* Maturity Tab */}
               <TabsContent value="maturity" className="space-y-6">
                 {/* Current Maturity Level */}
-                <Card className="bg-gray-800 border-gray-700">
+                <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                   <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2">
+                    <CardTitle className="text-white dark:text-gray-900 flex items-center gap-2">
                       <currentMaturityLevel.icon className="w-6 h-6" />
                       Your Current Maturity Level
                     </CardTitle>
@@ -1312,8 +1284,10 @@ export default function ProfilePage() {
                     <div className="space-y-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-2xl font-bold text-white">{currentMaturityLevel.title}</h3>
-                          <p className="text-gray-300">{currentMaturityLevel.description}</p>
+                          <h3 className="text-2xl font-bold text-white dark:text-gray-900">
+                            {currentMaturityLevel.title}
+                          </h3>
+                          <p className="text-gray-300 dark:text-gray-500">{currentMaturityLevel.description}</p>
                         </div>
                         <Badge className={`${currentMaturityLevel.color} text-white border-0 text-lg px-4 py-2`}>
                           Score: {profile.maturityScore}/100
@@ -1321,7 +1295,7 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="space-y-2">
-                        <div className="flex justify-between text-sm text-gray-400">
+                        <div className="flex justify-between text-sm text-gray-400 dark:text-gray-500">
                           <span>Progress</span>
                           <span>{Math.round((profile.maturityScore / 100) * 100)}%</span>
                         </div>
@@ -1330,10 +1304,10 @@ export default function ProfilePage() {
 
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
-                          <h4 className="font-semibold text-white mb-3">Current Characteristics</h4>
+                          <h4 className="font-semibold text-white dark:text-gray-900 mb-3">Current Characteristics</h4>
                           <ul className="space-y-2">
                             {currentMaturityLevel.characteristics.map((characteristic, index) => (
-                              <li key={index} className="flex items-start gap-2 text-gray-300">
+                              <li key={index} className="flex items-start gap-2 text-gray-300 dark:text-gray-500">
                                 <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                                 <span className="text-sm">{characteristic}</span>
                               </li>
@@ -1342,10 +1316,10 @@ export default function ProfilePage() {
                         </div>
 
                         <div>
-                          <h4 className="font-semibold text-white mb-3">Recommended Next Steps</h4>
+                          <h4 className="font-semibold text-white dark:text-gray-900 mb-3">Recommended Next Steps</h4>
                           <ul className="space-y-2">
                             {currentMaturityLevel.nextSteps.map((step, index) => (
-                              <li key={index} className="flex items-start gap-2 text-gray-300">
+                              <li key={index} className="flex items-start gap-2 text-gray-300 dark:text-gray-500">
                                 <ArrowRight className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                                 <span className="text-sm">{step}</span>
                               </li>
@@ -1358,9 +1332,9 @@ export default function ProfilePage() {
                 </Card>
 
                 {/* All Maturity Levels Overview */}
-                <Card className="bg-gray-800 border-gray-700">
+                <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                   <CardHeader>
-                    <CardTitle className="text-white">Startup Maturity Framework</CardTitle>
+                    <CardTitle className="text-white dark:text-gray-900">Startup Maturity Framework</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
@@ -1379,13 +1353,13 @@ export default function ProfilePage() {
                                 <level.icon className="w-5 h-5 text-white" />
                               </div>
                               <div>
-                                <h4 className="font-semibold text-white">{level.title}</h4>
-                                <p className="text-sm text-gray-300">{level.description}</p>
+                                <h4 className="font-semibold text-white dark:text-gray-900">{level.title}</h4>
+                                <p className="text-sm text-gray-300 dark:text-gray-500">{level.description}</p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="text-sm text-gray-400">Score Range</div>
-                              <div className="font-semibold text-white">
+                              <div className="text-sm text-gray-400 dark:text-gray-500">Score Range</div>
+                              <div className="font-semibold text-white dark:text-gray-900">
                                 {level.scoreRange[0]}-{level.scoreRange[1]}
                               </div>
                             </div>
@@ -1403,8 +1377,8 @@ export default function ProfilePage() {
                 <Card className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border-blue-700">
                   <CardContent className="p-6 text-center">
                     <Zap className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-white mb-2">Ready to Level Up?</h3>
-                    <p className="text-gray-300 mb-4">
+                    <h3 className="text-xl font-bold text-white dark:text-gray-900 mb-2">Ready to Level Up?</h3>
+                    <p className="text-gray-300 dark:text-gray-500 mb-4">
                       Take our comprehensive assessment to get personalized recommendations for advancing to the next
                       maturity stage.
                     </p>
@@ -1434,30 +1408,30 @@ export default function ProfilePage() {
               {/* Support Tab */}
               <TabsContent value="support" className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
-                  <Card className="bg-gray-800 border-gray-700">
+                  <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-white">
+                      <CardTitle className="flex items-center gap-2 text-white dark:text-gray-900">
                         <MessageCircle className="w-5 h-5" />
                         Live Chat Support
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 mb-4">
+                      <p className="text-gray-300 dark:text-gray-500 mb-4">
                         Get instant help from our support team. We're available 24/7 to assist you.
                       </p>
                       <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Start Chat</Button>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-gray-800 border-gray-700">
+                  <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-white">
+                      <CardTitle className="flex items-center gap-2 text-white dark:text-gray-900">
                         <Calendar className="w-5 h-5" />
                         Schedule Consultation
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 mb-4">
+                      <p className="text-gray-300 dark:text-gray-500 mb-4">
                         Book a free consultation with our business experts to discuss your needs.
                       </p>
                       <Button
@@ -1469,36 +1443,40 @@ export default function ProfilePage() {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-gray-800 border-gray-700">
+                  <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-white">
+                      <CardTitle className="flex items-center gap-2 text-white dark:text-gray-900">
                         <FileText className="w-5 h-5" />
                         Knowledge Base
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 mb-4">Browse our comprehensive guides and documentation.</p>
+                      <p className="text-gray-300 dark:text-gray-500 mb-4">
+                        Browse our comprehensive guides and documentation.
+                      </p>
                       <Button
                         variant="outline"
-                        className="w-full border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                        className="w-full border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
                       >
                         Browse Articles
                       </Button>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-gray-800 border-gray-700">
+                  <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-white">
+                      <CardTitle className="flex items-center gap-2 text-white dark:text-gray-900">
                         <Mail className="w-5 h-5" />
                         Email Support
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 mb-4">Send us an email and we'll get back to you within 24 hours.</p>
+                      <p className="text-gray-300 dark:text-gray-500 mb-4">
+                        Send us an email and we'll get back to you within 24 hours.
+                      </p>
                       <Button
                         variant="outline"
-                        className="w-full border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                        className="w-full border-gray-600 text-gray-300 dark:text-gray-500 hover:bg-gray-700 dark:hover:bg-gray-200 bg-transparent"
                         onClick={() => (window.location.href = "mailto:support@inomax.ai")}
                       >
                         Send Email
@@ -1508,36 +1486,42 @@ export default function ProfilePage() {
                 </div>
 
                 {/* FAQ Section */}
-                <Card className="bg-gray-800 border-gray-700">
+                <Card className="bg-gray-800 dark:bg-white border-gray-700 dark:border-gray-200">
                   <CardHeader>
-                    <CardTitle className="text-white">Frequently Asked Questions</CardTitle>
+                    <CardTitle className="text-white dark:text-gray-900">Frequently Asked Questions</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      <div className="border-b border-gray-700 pb-4">
-                        <h4 className="font-medium text-white mb-2">How do I generate my free assessment report?</h4>
-                        <p className="text-sm text-gray-300">
+                      <div className="border-b border-gray-700 dark:border-gray-200 pb-4">
+                        <h4 className="font-medium text-white dark:text-gray-900 mb-2">
+                          How do I generate my free assessment report?
+                        </h4>
+                        <p className="text-sm text-gray-300 dark:text-gray-500">
                           Navigate to the Services tab and click on "Generate Free Report" in the Starter package. The
                           report will be automatically generated and sent to your email within 5 minutes.
                         </p>
                       </div>
-                      <div className="border-b border-gray-700 pb-4">
-                        <h4 className="font-medium text-white mb-2">What file types can I upload?</h4>
-                        <p className="text-sm text-gray-300">
+                      <div className="border-b border-gray-700 dark:border-gray-200 pb-4">
+                        <h4 className="font-medium text-white dark:text-gray-900 mb-2">
+                          What file types can I upload?
+                        </h4>
+                        <p className="text-sm text-gray-300 dark:text-gray-500">
                           We support PDF, Word documents, Excel spreadsheets, images (JPG, PNG, GIF), and text files.
                           Maximum file size is 100MB per file.
                         </p>
                       </div>
-                      <div className="border-b border-gray-700 pb-4">
-                        <h4 className="font-medium text-white mb-2">How is my data protected?</h4>
-                        <p className="text-sm text-gray-300">
+                      <div className="border-b border-gray-700 dark:border-gray-200 pb-4">
+                        <h4 className="font-medium text-white dark:text-gray-900 mb-2">How is my data protected?</h4>
+                        <p className="text-sm text-gray-300 dark:text-gray-500">
                           All evaluations are accompanied by a signed NDA, ensuring complete confidentiality. Your data
                           is encrypted and stored securely according to Swiss data protection standards.
                         </p>
                       </div>
                       <div>
-                        <h4 className="font-medium text-white mb-2">Can I upgrade my service package?</h4>
-                        <p className="text-sm text-gray-300">
+                        <h4 className="font-medium text-white dark:text-gray-900 mb-2">
+                          Can I upgrade my service package?
+                        </h4>
+                        <p className="text-sm text-gray-300 dark:text-gray-500">
                           Yes, you can upgrade to any premium package at any time. Contact our support team or book a
                           consultation to discuss the best option for your needs.
                         </p>
