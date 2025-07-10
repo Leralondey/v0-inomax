@@ -41,13 +41,19 @@ import LiveChat from "@/components/live-chat"
 import { useState } from "react"
 import SignupModal from "@/components/signup-modal"
 import { Navigation } from "@/components/navigation"
+import LoginModal from "@/components/login-modal" // <-- 1. IMPORT DE LOGIN MODAL
 
 export default function HomePage() {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false) // <-- 2. AJOUT DE L'ÉTAT POUR LOGIN
 
   return (
     <div className="min-h-screen bg-gray-900 text-white dark:bg-gray-50 dark:text-gray-900">
-      <Navigation />
+      {/* 3. MODIFICATION DE NAVIGATION POUR PASSER LES PROPS */}
+      <Navigation
+        onLoginClick={() => setIsLoginModalOpen(true)}
+        onSignupClick={() => setIsSignupModalOpen(true)}
+      />
 
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 dark:from-gray-50 dark:via-gray-100 dark:to-gray-50">

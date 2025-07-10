@@ -1,7 +1,8 @@
-import type React from "react"
-import type { Metadata } from "next"
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+// in app/layout.tsx
+import type React from "react";
+import type { Metadata } from "next";
+import "./globals.css";
+import Providers from "./providers"; // <-- Importer notre fichier de providers unifié
 
 export const metadata: Metadata = {
   title: "Inomax.ai - AI-Powered Business Intelligence",
@@ -17,12 +18,12 @@ export const metadata: Metadata = {
     shortcut: "/favicon.png",
     apple: "/apple-touch-icon.png",
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -34,16 +35,9 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem={true}
-          disableTransitionOnChange={false}
-          storageKey="inomax-theme"
-        >
-          {children}
-        </ThemeProvider>
+        {/* On utilise simplement le composant Providers qui contient tout */}
+        <Providers>{children}</Providers>
       </body>
     </html>
-  )
+  );
 }
